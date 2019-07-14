@@ -23,7 +23,7 @@
         <div class="navbar navbar-default navbar-static-top" role="navigation">
             <div class="container">
                 <div class="navbar-header">
-                    {#<a href="{{ path('blog_index') }}" class="navbar-brand">SOFTUNI BLOG</a>#}
+                    <a href="{{ path('blog_index') }}" class="navbar-brand">SOFTUNI BLOG</a>
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -32,34 +32,34 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
-                        {#{% if app.user %}#}
-                        {#<li>#}
-                        {#<a href="{{ path('user_profile') }}" class="navbar-brand">#}
-                        {#My Profile#}
-                        {#</a>#}
-                        {#</li>#}
-                        {#<li>#}
-                        {#<a href="{{ path('article_create') }}" class="navbar-brand">#}
-                        {#Create Article#}
-                        {#</a>#}
-                        {#</li>#}
-                        {#<li>#}
-                        {#<a href="{{ path('security_logout') }}" class="navbar-brand">#}
-                        {#Logout#}
-                        {#</a>#}
-                        {#</li>#}
-                        {#{% else %}#}
-                        {#<li>#}
-                        {#<a href="{{ path('user_register') }}">#}
-                        {#REGISTER#}
-                        {#</a>#}
-                        {#</li>#}
-                        {#<li>#}
-                        {#<a href="{{ path('security_login') }}">#}
-                        {#LOGIN#}
-                        {#</a>#}
-                        {#</li>#}
-                        {#{% endif %}#}
+                        {% if app.user %}
+{#                        <li>#}
+{#                        <a href="{{ path('user_profile') }}" class="navbar-brand">#}
+{#                        My Profile#}
+{#                        </a>#}
+{#                        </li>#}
+                        <li>
+                        <a href="{{ path('article_create') }}" class="navbar-brand">
+                        Create Article
+                        </a>
+                        </li>
+{#                        <li>#}
+{#                        <a href="{{ path('security_logout') }}" class="navbar-brand">#}
+{#                        Logout#}
+{#                        </a>#}
+{#                        </li>#}
+                        {% else %}
+                        <li>
+                        <a href="{{ path('user_register') }}" >
+                        REGISTER
+                        </a>
+                        </li>
+                        <li>
+                        <a href="{{ path('security_login') }}">
+                        LOGIN
+                        </a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
