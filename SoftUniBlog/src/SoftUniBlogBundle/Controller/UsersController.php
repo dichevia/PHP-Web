@@ -18,7 +18,7 @@ class UsersController extends Controller
      * @param Request $request
      * @return RedirectResponse|Response
      */
-    public function registerAction(Request $request)
+    public function register(Request $request)
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -37,5 +37,25 @@ class UsersController extends Controller
             return $this->redirectToRoute("security_login");
         }
         return $this->render("blog/register.html.twig",['form'=>$form->createView()]);
+    }
+
+    /**
+     * @Route("/logout", name="security_logout")
+     * @throws \Exception
+     */
+    public function logout()
+    {
+        throw new \Exception("Logout failed!");
+    }
+
+    /**
+     * @Route("/profle", name="user_profile")
+     */
+    public function profile()
+    {
+        $userRepository = $this->getDoctrine()->getRepository(User::class);
+        $currentUser = $userRepository->find($this->getUser());
+
+        return $this->render('blog/profile.html.twig', ['user' => $currentUser]);
     }
 }
