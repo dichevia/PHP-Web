@@ -49,6 +49,10 @@ class ArticleController extends Controller
     {
         $article = $this->getDoctrine()->getRepository(Article::class)->find($id);
 
+        if ($article === null) {
+            return $this->redirectToRoute("blog_index");
+        }
+
         return $this->render('article/article.html.twig', ['article' => $article]);
     }
 
@@ -65,6 +69,11 @@ class ArticleController extends Controller
         $article = $this->getDoctrine()->getRepository(Article::class)->find($id);
 
         if ($article === null) {
+            return $this->redirectToRoute("blog_index");
+        }
+
+        $currentUser = $this->getUser();
+        if (!$currentUser->isAuthor($article) && !$currentUser->isAdmin()) {
             return $this->redirectToRoute("blog_index");
         }
 
@@ -95,7 +104,13 @@ class ArticleController extends Controller
     {
         $article = $this->getDoctrine()->getRepository(Article::class)->find($id);
 
-        if($article === null){
+        if ($article === null) {
+            return $this->redirectToRoute("blog_index");
+        }
+
+        $currentUser = $this->getUser();
+
+        if (!$currentUser->isAuthor($article) && !$currentUser->isAdmin()) {
             return $this->redirectToRoute("blog_index");
         }
 
@@ -103,7 +118,7 @@ class ArticleController extends Controller
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($article);
             $em->flush();
