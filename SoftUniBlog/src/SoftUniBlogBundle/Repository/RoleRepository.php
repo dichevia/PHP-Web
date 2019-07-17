@@ -2,6 +2,10 @@
 
 namespace SoftUniBlogBundle\Repository;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping;
+use SoftUniBlogBundle\Entity\Role;
+
 /**
  * RoleRepository
  *
@@ -10,4 +14,12 @@ namespace SoftUniBlogBundle\Repository;
  */
 class RoleRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function __construct(EntityManagerInterface $em, Mapping\ClassMetadata $metadata = null)
+    {
+        parent::__construct($em,
+            $metadata == null ?
+                new Mapping\ClassMetadata(Role::class) :
+                $metadata
+        );
+    }
 }

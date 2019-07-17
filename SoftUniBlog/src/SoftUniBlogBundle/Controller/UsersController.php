@@ -2,9 +2,9 @@
 
 namespace SoftUniBlogBundle\Controller;
 
-use SoftUniBlogBundle\Entity\Role;
 use SoftUniBlogBundle\Entity\User;
 use SoftUniBlogBundle\Form\UserType;
+use SoftUniBlogBundle\Service\Users\UserServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,38 +14,44 @@ use Symfony\Component\Routing\Annotation\Route;
 class UsersController extends Controller
 {
     /**
-     * @Route("register", name="user_register")
+     * @var UserServiceInterface
+     */
+    private $userService;
+
+    public function __construct(UserServiceInterface $userService)
+    {
+        $this->userService = $userService;
+    }
+
+    /**
+     * @Route("register", name="user_register", methods={"GET"})
      *
      * @param Request $request
      * @return RedirectResponse|Response
      */
     public function register(Request $request)
     {
+        return $this->render("blog/register.html.twig",
+            ['form' => $this->createForm(UserType::class)->createView()]);
+    }
+
+    /**
+     * @Route("register", methods={"POST"})
+     *
+     * @param Request $request
+     * @return RedirectResponse|Response
+     */
+    public function registerProcess(Request $request)
+    {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()){
+        $this->userService->save($user);
 
-            $password = $this->get('security.password_encoder')
-                ->encodePassword($user, $user->getPassword());
-
-            $user->setPassword($password);
-
-            $roleRepository = $this->getDoctrine()->getRepository(Role::class);
-            $userRole = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
-
-            /** @var Role $userRole */
-            $user->addRole($userRole);
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
-
-            return $this->redirectToRoute("security_login");
-        }
-        return $this->render("blog/register.html.twig",['form'=>$form->createView()]);
+        return $this->redirectToRoute("security_login");
     }
+
 
     /**
      * @Route("/logout", name="security_logout")
@@ -61,9 +67,6 @@ class UsersController extends Controller
      */
     public function profile()
     {
-        $userRepository = $this->getDoctrine()->getRepository(User::class);
-        $currentUser = $userRepository->find($this->getUser());
-
-        return $this->render('blog/profile.html.twig', ['user' => $currentUser]);
+        return $this->render('blog/profile.html.twig', ['user' => $this->userService->currentUser()]);
     }
 }
