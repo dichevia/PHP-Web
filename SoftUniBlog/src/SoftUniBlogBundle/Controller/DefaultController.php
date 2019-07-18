@@ -13,7 +13,7 @@ class DefaultController extends Controller
      */
     public function index()
     {
-        $articles = $this->getDoctrine()->getRepository(Article::class)->findAll();
+        $articles = $this->getDoctrine()->getRepository(Article::class)->findBy([], ['viewCount'=>'DESC', 'dateAdded'=>'DESC']);
         return $this->render('blog/index.html.twig', ['articles' => $articles]);
     }
 }

@@ -1,12 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
+    {% for message in app.flashes('create') %}
+        <div class="success">
+            {{ message }}
+        </div>
+    {% endfor %}
     <div class="container body-content">
         <div class="row">
             {% for article in articles %}
                 <div class="col-md-6">
                     <article>
                         <header>
+                            <a href="{{ path('article_view', { id:article.id}) }}"><img src="{{ article.imageURL }}" height="180" width="190" alt="none"></a>
                             <h2>{{ article.title }}</h2>
                         </header>
 
@@ -15,7 +21,9 @@
                         </p>
 
                         <small class="author">
-                            Added by {{ article.author.fullName }} on {{ article.dateAdded|date('d.m.Y') }}
+                            Added by {{ article.author.fullName }}
+                        </small><small class="views">
+                            Views: {{ article.getViewCount() }}
                         </small>
 
                         <footer>

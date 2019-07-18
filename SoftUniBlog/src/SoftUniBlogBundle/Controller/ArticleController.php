@@ -30,9 +30,12 @@ class ArticleController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $article->setAuthor($this->getUser());
+            $article->setViewCount(0);
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
             $em->flush();
+
+            $this->addFlash('create', 'Article added successfully!');
 
             return $this->redirectToRoute('blog_index');
         }
@@ -52,6 +55,11 @@ class ArticleController extends Controller
         if ($article === null) {
             return $this->redirectToRoute("blog_index");
         }
+
+        $article->setViewCount($article->getViewCount()+1);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($article);
+        $em->flush();
 
         return $this->render('article/article.html.twig', ['article' => $article]);
     }
@@ -127,5 +135,23 @@ class ArticleController extends Controller
         }
 
         return $this->render('article/delete.html.twig', ['article' => $article, 'form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/articles/my-articles", name="my_articles")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @return Response
+     */
+    public function getAllArticlesByUser()
+    {
+        $articles = $this
+            ->getDoctrine()
+            ->getRepository(Article::class)
+            ->findBy(['author' => $this->getUser()], ['dateAdded'=>'DESC']);
+
+        return $this->render('article/my-articles.html.twig',
+            ['articles' => $articles]
+        );
     }
 }

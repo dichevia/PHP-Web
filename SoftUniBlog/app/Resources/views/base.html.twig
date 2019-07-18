@@ -14,6 +14,11 @@
         <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.min.css') }}">
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+    <script>
+        setTimeout(function () {
+            $(".success").fadeOut();
+        }, 2000)
+    </script>
 </head>
 
 <body id="{% block body_id %}{% endblock %}">
@@ -33,32 +38,37 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav navbar-right">
                         {% if app.user %}
-                        <li>
-                        <a href="{{ path('user_profile') }}" class="navbar-brand">
-                        My Profile
-                        </a>
-                        </li>
-                        <li>
-                        <a href="{{ path('article_create') }}" class="navbar-brand">
-                        Create Article
-                        </a>
-                        </li>
-                        <li>
-                        <a href="{{ path('security_logout') }}" class="navbar-brand">
-                        Logout
-                        </a>
-                        </li>
+                            <li>
+                                <a href="{{ path('user_profile') }}" class="navbar-brand">
+                                    My Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('my_articles') }}" class="navbar-brand">
+                                    My Articles
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('article_create') }}" class="navbar-brand">
+                                    Create Article
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('security_logout') }}" class="navbar-brand">
+                                    Logout
+                                </a>
+                            </li>
                         {% else %}
-                        <li>
-                        <a href="{{ path('user_register') }}" >
-                        REGISTER
-                        </a>
-                        </li>
-                        <li>
-                        <a href="{{ path('security_login') }}">
-                        LOGIN
-                        </a>
-                        </li>
+                            <li>
+                                <a href="{{ path('user_register') }}">
+                                    REGISTER
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('security_login') }}">
+                                    LOGIN
+                                </a>
+                            </li>
                         {% endif %}
                     </ul>
                 </div>
@@ -80,7 +90,7 @@
 {% block footer %}
     <footer>
         <div class="container modal-footer">
-            <p>&copy; 2018 - Software University Foundation</p>
+            <p>&copy; 2019 - Software University Foundation</p>
         </div>
     </footer>
 {% endblock %}
