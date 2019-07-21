@@ -6,7 +6,7 @@ namespace TopCarBundle\Service\Users;
 
 use Symfony\Component\Security\Core\Security;
 use TopCarBundle\Entity\User;
-use TopCarBundle\Repository\UserRepository;
+use TopCarBundle\Repository\Users\UserRepository;
 use TopCarBundle\Service\Encryption\ArgonEncryption;
 
 class UserService implements UserServiceInterface
@@ -28,7 +28,7 @@ class UserService implements UserServiceInterface
 
     public function findOneByEmail($email)
     {
-        // TODO: Implement findOneByEmail() method.
+        return $this->userRepository->findOneBy(['email' => $email]);
     }
 
     public function save(User $user)
@@ -41,16 +41,16 @@ class UserService implements UserServiceInterface
 
     public function findOneById($id)
     {
-        // TODO: Implement findOneById() method.
+        $this->userRepository->find($id);
     }
 
     public function findOne($user)
     {
-        // TODO: Implement findOne() method.
+        return $this->userRepository->find($user);
     }
 
     public function currentUser()
     {
-        // TODO: Implement currentUser() method.
+        return $this->security->getUser();
     }
 }

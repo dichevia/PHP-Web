@@ -2,6 +2,7 @@
 
 namespace TopCarBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -9,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * User
  *
  * @ORM\Table(name="users")
- * @ORM\Entity(repositoryClass="TopCarBundle\Repository\UserRepository")
+ * @ORM\Entity(repositoryClass="TopCarBundle\Repository\Users\UserRepository")
  */
 class User implements UserInterface
 {
@@ -49,6 +50,18 @@ class User implements UserInterface
      * @ORM\Column(name="lastName", type="string", length=255)
      */
     private $lastName;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="TopCarBundle\Entity\Car", mappedBy="owner" )
+     */
+    private $cars;
+
+    public function __construct()
+    {
+        $this->cars = new ArrayCollection();
+    }
 
 
     /**
@@ -173,7 +186,7 @@ class User implements UserInterface
      */
     public function getRoles()
     {
-        // TODO: Implement getRoles() method.
+        return array('ROLE_USER');
     }
 
     /**
@@ -207,5 +220,24 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCars(): ArrayCollection
+    {
+        return $this->cars;
+    }
+
+    /**
+     * @param Car $car
+     * @return User
+     */
+    public function addCar(Car $car)
+    {
+        $this->cars[] = $car;
+
+        return $this;
     }
 }
