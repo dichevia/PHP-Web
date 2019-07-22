@@ -19,4 +19,6 @@ interface CarServiceInterface
     public function findOneById(int $id);
 
     public function findAllByOwnerId(int $id);
+
+    public function findFirstMostViewed();
 }

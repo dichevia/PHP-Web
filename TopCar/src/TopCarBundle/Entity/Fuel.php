@@ -91,4 +91,9 @@ class Fuel
     {
         $this->cars = $cars;
     }
+
+    public function __toString()
+    {
+        return (string) $this->type;
+    }
 }

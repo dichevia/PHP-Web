@@ -22,7 +22,7 @@ class CarService implements CarServiceInterface
 
     public function save(Car $car): bool
     {
-        // TODO: Implement insert() method.
+        return $this->carRepository->insert($car);
     }
 
     public function update(Car $car, int $id): bool
@@ -40,13 +40,19 @@ class CarService implements CarServiceInterface
         // TODO: Implement findAll() method.
     }
 
+
     public function findOneById(int $id)
     {
-        // TODO: Implement findOneById() method.
+        return $this->carRepository->find($id);
     }
 
     public function findAllByOwnerId(int $id)
     {
         // TODO: Implement findAllByOwnerId() method.
+    }
+
+    public function findFirstMostViewed()
+    {
+        return $this->carRepository->getFirstMostViewed();
     }
 }

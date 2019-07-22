@@ -91,4 +91,9 @@ class Brand
     {
         $this->cars = $cars;
     }
+
+    public function __toString()
+    {
+        return (string) $this->name;
+    }
 }

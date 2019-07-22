@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block body_id 'create' %}
+{% block main %}
+    <div class="signup-form">
+        <form action="{{ path('car_create') }}" method="post">
+            <h2>Add Car</h2>
+                        <p class="hint-text">Create your car.</p>
+
+            <div class="form-group">
+                <select class="custom-select" name="car[brand]">
+                    {% for brand in brands %}
+                        <option value="{{ brand.id }}">{{ brand.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="car[model]" placeholder="Model"
+                       required="required"></div>
+            <div class="form-group">
+                <select class="custom-select" name="car[body]">
+                    {% for body in bodies %}
+                        <option value="{{ body.id }}">{{ body.type }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="car[year]" placeholder="Year Made"
+                       required="required"></div>
+            <div class="form-group">
+                <select class="custom-select" name="car[fuel]">
+                    {% for fuel in fuels %}
+                        <option value="{{ fuel.id }}">{{ fuel.type }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="car[power]" placeholder="Power"
+                       required="required"></div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="car[topSpeed]" placeholder="Top Speed"
+                       required="required"></div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="car[acceleration]" placeholder="Acceleration"
+                       required="required"></div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="car[image]" placeholder="Image"
+                       required="required"></div>
+            {{ form_row(form._token) }}
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-lg btn-block">Add</button>
+                </div>
+        </form>
+    </div>
+{% endblock %}

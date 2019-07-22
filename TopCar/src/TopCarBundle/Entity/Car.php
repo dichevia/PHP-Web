@@ -46,9 +46,9 @@ class Car
     private $body;
 
     /**
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(name="year", type="date")
+     * @ORM\Column(name="year", type="string", length=255)
      */
     private $year;
 
@@ -109,6 +109,17 @@ class Car
      */
     private $image;
 
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dateAdded", type="datetime")
+     */
+    private $dateAdded;
+
+public function __construct()
+{
+    $this->dateAdded = new \DateTime();
+}
 
     /**
      * Get id.
@@ -298,10 +309,8 @@ class Car
         return $this->acceleration;
     }
 
-    /**
-     * @return int
-     */
-    public function getOwnerId(): int
+
+    public function getOwnerId()
     {
         return $this->ownerId;
     }
@@ -339,7 +348,7 @@ class Car
     /**
      * @return int
      */
-    public function getViewCount(): int
+    public function getViewCount()
     {
         return $this->viewCount;
     }
@@ -347,7 +356,7 @@ class Car
     /**
      * @param int $viewCount
      */
-    public function setViewCount(int $viewCount): void
+    public function setViewCount(int $viewCount)
     {
         $this->viewCount = $viewCount;
     }
@@ -355,7 +364,7 @@ class Car
     /**
      * @return string
      */
-    public function getImage(): string
+    public function getImage()
     {
         return $this->image;
     }
@@ -363,9 +372,25 @@ class Car
     /**
      * @param string $image
      */
-    public function setImage(string $image): void
+    public function setImage($image)
     {
         $this->image = $image;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateAdded(): \DateTime
+    {
+        return $this->dateAdded;
+    }
+
+    /**
+     * @param \DateTime $dateAdded
+     */
+    public function setDateAdded(\DateTime $dateAdded): void
+    {
+        $this->dateAdded = $dateAdded;
     }
 
 
