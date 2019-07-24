@@ -1,8 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block body_id %}
-
-{% endblock %}
+{% block body_id 'view' %}
 
 {% block main %}
     <div class="container">
@@ -19,6 +17,7 @@
                 <p class="lead">
                     by
                     <a href="#">{{ car.owner.firstName }} {{ car.owner.lastName  }}</a>
+
                 </p>
 
                 <hr>
@@ -44,7 +43,7 @@
 
                 <p><b>Fuel Type:</b> {{ car.fuel }}</p>
 
-                <p><b>Power:</b> {{ car.power }} hp</p>
+                <p><b>Power:</b> {{ car.power }}hp</p>
 
                 <p><b>Acceleration 0 to 100km/h:</b> {{ car.acceleration }}sec</p>
 

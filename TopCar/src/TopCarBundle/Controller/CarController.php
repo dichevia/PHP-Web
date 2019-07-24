@@ -117,18 +117,112 @@ class CarController extends Controller
      */
     public function view($id)
     {
-
-        $car =$this->carService->findOneById($id);
+        /*** @var Car $car */
+        $car = $this->carService->findOneById($id);
 
         if ($car === null) {
             return $this->redirectToRoute("homepage");
         }
-        $car->setViewCount($car->getViewCount()+1);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($car);
-        $em->flush();
+
+        $car->setViewCount($car->getViewCount() + 1);
+        $this->carService->save($car);
 
         return $this->render('car/car.html.twig', ['car' => $car]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @param $id
+     * @return Response
+     * @Route("/car/edit/{id}",name="car_edit", methods={"GET"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     */
+    public function edit(Request $request, $id)
+    {
+        $car = $this->carService->findOneById($id);
+        $brands = $this->brandService->findAll();
+        $bodies = $this->bodyService->findAll();
+        $fuels = $this->fuelService->findAll();
+
+        $form = $this->createForm(CarType::class, $car);
+        $form->handleRequest($request);
+
+        return $this->render('car/edit.html.twig',
+            [
+                'form' => $form->createView(),
+                'car' => $car,
+                'brands' => $brands,
+                'bodies' => $bodies,
+                'fuels' => $fuels
+            ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     *
+     * @return Response
+     * @Route("/car/edit/{id}", methods={"POST"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     */
+    public function editProcess(Request $request, $id)
+    {
+        /*** @var Car $car */
+        $car = $this->carService->findOneById($id);
+
+        $form = $this->createForm(CarType::class, $car);
+        $form->handleRequest($request);
+
+        $car->setOwner($car->getOwner());
+        $car->setViewCount($car->getViewCount());
+
+        $this->carService->save($car);
+
+        return $this->redirectToRoute('car_view', ['id' => $car->getId()]);
+    }
+
+    /**
+     * @Route("/car/my-cars", name="my_cars")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @return Response
+     */
+    public function getAllArticlesByUser()
+    {
+        $car = $this->carService->findAllByOwnerId();
+
+        return $this->render('car/my-cars.html.twig',
+            ['cars' => $car]
+        );
+    }
+
+
+
+    /**
+     * @param Request $request
+     * @param $id
+     *
+     * @return Response
+     * @Route("/car/delete/{id}", name="car_delete", methods={"GET"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     */
+
+    public function deleteProcess(Request $request, $id)
+    {
+        /*** @var Car $car */
+        $car = $this->carService->findOneById($id);
+
+        $form = $this->createForm(CarType::class, $car);
+        $form->handleRequest($request);
+
+        $car->setOwner($car->getOwner());
+        $car->setViewCount($car->getViewCount());
+        $this->carService->remove($car);
+
+        return $this->redirectToRoute('my_cars');
     }
 
 }

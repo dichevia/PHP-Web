@@ -3,7 +3,6 @@
 
 namespace TopCarBundle\Service\Cars;
 
-
 use TopCarBundle\Entity\Car;
 use TopCarBundle\Repository\Cars\CarRepository;
 use TopCarBundle\Service\Users\UserServiceInterface;
@@ -22,6 +21,7 @@ class CarService implements CarServiceInterface
 
     public function save(Car $car): bool
     {
+
         return $this->carRepository->insert($car);
     }
 
@@ -30,9 +30,9 @@ class CarService implements CarServiceInterface
         // TODO: Implement update() method.
     }
 
-    public function remove(int $id): bool
+    public function remove(Car $car): bool
     {
-        // TODO: Implement remove() method.
+        return $this->carRepository->remove($car);
     }
 
     public function findAll()
@@ -46,9 +46,9 @@ class CarService implements CarServiceInterface
         return $this->carRepository->find($id);
     }
 
-    public function findAllByOwnerId(int $id)
+    public function findAllByOwnerId()
     {
-        // TODO: Implement findAllByOwnerId() method.
+        return $this->carRepository->findBy(['owner' => $this->userService->currentUser()], ['dateAdded' => 'DESC']);
     }
 
     public function findFirstMostViewed()

@@ -5,10 +5,7 @@ namespace TopCarBundle\Repository\Cars;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping;
 use Doctrine\ORM\ORMException;
-use TopCarBundle\Entity\Body;
-use TopCarBundle\Entity\Brand;
 use TopCarBundle\Entity\Car;
-use TopCarBundle\Entity\Fuel;
 
 /**
  * CarRepository
@@ -41,12 +38,21 @@ class CarRepository extends \Doctrine\ORM\EntityRepository
     public function getFirstMostViewed()
     {
         return $this->createQueryBuilder('car')
-            ->from(Car::class, 'c')
-            ->innerJoin(Brand::class, 'brand')
-//            ->orderBy('car.viewCount', 'DESC')
+            ->orderBy('car.viewCount', 'DESC')
             ->setMaxResults(4)
             ->getQuery()
             ->getResult();
+    }
+
+    public function remove($car)
+    {
+        try {
+            $this->_em->remove($car);
+            $this->_em->flush();
+            return true;
+        } catch (ORMException $e) {
+            return false;
+        }
     }
 
 
