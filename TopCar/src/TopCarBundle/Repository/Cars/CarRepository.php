@@ -55,5 +55,16 @@ class CarRepository extends \Doctrine\ORM\EntityRepository
         }
     }
 
+    public function update($car)
+    {
+        try {
+            $this->_em->merge($car);
+            $this->_em->flush();
+            return true;
+        } catch (ORMException $e) {
+            return false;
+        }
+    }
+
 
 }

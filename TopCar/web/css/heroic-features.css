@@ -20,7 +20,11 @@ body {
 /*#view{*/
 /*  background-color: #e9ecef;*/
 /*}*/
-
+h2{
+  color: #333;
+  font-weight: bold;
+  margin-top: 0;
+}
 #register{
   background-color: #e9ecef;
 }
@@ -158,4 +162,8 @@ table.table-striped tbody tr:nth-of-type(odd) {
   position: relative;
   top: 1px;
   margin: 0 2px;
+}
+
+.pull-right {
+  float: right !important;
 }

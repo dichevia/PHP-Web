@@ -1,12 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block body_id 'my_cars'%}
+{% block body_id 'my_cars' %}
 
 {% block main %}
 
-
     <div class="container">
         <div class="table-wrapper">
+            <h2>My Cars</h2>
+            <p class="hint-text">View, edit or delete your cars.</p>
+
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -20,17 +22,17 @@
                 </thead>
                 <tbody>
                 {% for car in cars %}
-                <tr>
-                    <td><img src="{{ car.image }}" height="50" width="70"></td>
-                    <td>{{ car.brand }}</td>
-                    <td>{{ car.model }}</td>
-                    <td><a class="btn btn-outline-info"  href="{{ path('car_view', {'id': car.id}) }}">View
-                            &raquo;</a></td>
-                    <td><a class="btn btn-outline-success" href="{{ path('car_edit', {'id': car.id}) }}">Edit
-                            &raquo;</a></td>
-                    <td><a class="btn btn-outline-danger" href="{{ path('car_delete', {'id': car.id}) }}">Delete
-                            &raquo;</a></td>
-                </tr>
+                    <tr>
+                        <td><img src="{{ car.image }}" height="50" width="80"></td>
+                        <td>{{ car.brand }}</td>
+                        <td>{{ car.model }}</td>
+                        <td><a class="btn btn-outline-info" href="{{ path('car_view', {'id': car.id}) }}">View
+                                &raquo;</a></td>
+                        <td><a class="btn btn-outline-success" href="{{ path('car_edit', {'id': car.id}) }}">Edit
+                                &raquo;</a></td>
+                        <td><a class="btn btn-outline-danger" href="{{ path('car_delete', {'id': car.id}) }}">Delete
+                                &raquo;</a></td>
+                    </tr>
                 {% endfor %}
                 </tbody>
             </table>

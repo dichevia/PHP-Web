@@ -58,9 +58,21 @@ class User implements UserInterface
      */
     private $cars;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="TopCarBundle\Entity\Role")
+     * @ORM\JoinTable(name="users_roles",
+     *  joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *  inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
+     *     )
+     */
+    private $roles;
+
     public function __construct()
     {
         $this->cars = new ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 
 
@@ -182,11 +194,29 @@ class User implements UserInterface
      * and populated in any number of different ways when the user object
      * is created.
      *
-     * @return (Role|string)[] The user roles
+     * @return array (Role|string)[] The user roles
      */
     public function getRoles()
     {
-        return array('ROLE_USER');
+        $stringRoles = [];
+        foreach ($this->roles as $role) {
+            /** @var Role $role */
+            $stringRoles[] = $role->getRole();
+        }
+        return $stringRoles;
+    }
+
+    /**
+     *
+     *
+     * @param $role
+     * @return User
+     */
+    public function addRole($role)
+    {
+        $this->roles[] = $role;
+
+        return $this;
     }
 
     /**
@@ -239,5 +269,19 @@ class User implements UserInterface
         $this->cars[] = $car;
 
         return $this;
+    }
+
+    /**
+     * @param Car $car
+     * @return bool
+     */
+    public function isOwner(Car $car)
+    {
+        return $car->getOwnerId() == $this->getId();
+    }
+
+    public function isAdmin()
+    {
+        return in_array('ROLE_ADMIN', $this->getRoles());
     }
 }

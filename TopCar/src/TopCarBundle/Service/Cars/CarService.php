@@ -25,9 +25,9 @@ class CarService implements CarServiceInterface
         return $this->carRepository->insert($car);
     }
 
-    public function update(Car $car, int $id): bool
+    public function edit(Car $car): bool
     {
-        // TODO: Implement update() method.
+        return $this->carRepository->update($car);
     }
 
     public function remove(Car $car): bool
@@ -37,9 +37,8 @@ class CarService implements CarServiceInterface
 
     public function findAll()
     {
-        // TODO: Implement findAll() method.
+        return $this->carRepository->findAll();
     }
-
 
     public function findOneById(int $id)
     {

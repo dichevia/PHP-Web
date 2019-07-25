@@ -9,7 +9,7 @@ interface CarServiceInterface
 {
     public function save(Car $car): bool;
 
-    public function update(Car $car, int $id): bool;
+    public function edit(Car $car): bool;
 
     public function remove(Car $car): bool;
 

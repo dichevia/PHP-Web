@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use TopCarBundle\Entity\Car;
+use TopCarBundle\Entity\User;
 use TopCarBundle\Form\CarType;
 use TopCarBundle\Service\Cars\BodyServiceInterface;
 use TopCarBundle\Service\Cars\BrandServiceInterface;
@@ -146,6 +147,17 @@ class CarController extends Controller
         $bodies = $this->bodyService->findAll();
         $fuels = $this->fuelService->findAll();
 
+        if (null == $car){
+            return $this->redirectToRoute('homepage');
+        }
+
+        /** @var User $currentUser */
+        $currentUser = $this->userService->currentUser();
+        if (!$currentUser->isAdmin() && !$currentUser->isOwner($car)){
+            return $this->redirectToRoute('homepage');
+        }
+
+
         $form = $this->createForm(CarType::class, $car);
         $form->handleRequest($request);
 
@@ -170,8 +182,9 @@ class CarController extends Controller
      */
     public function editProcess(Request $request, $id)
     {
-        /*** @var Car $car */
+        /** @var Car $car */
         $car = $this->carService->findOneById($id);
+
 
         $form = $this->createForm(CarType::class, $car);
         $form->handleRequest($request);
@@ -179,7 +192,7 @@ class CarController extends Controller
         $car->setOwner($car->getOwner());
         $car->setViewCount($car->getViewCount());
 
-        $this->carService->save($car);
+        $this->carService->edit($car);
 
         return $this->redirectToRoute('car_view', ['id' => $car->getId()]);
     }
@@ -214,6 +227,16 @@ class CarController extends Controller
     {
         /*** @var Car $car */
         $car = $this->carService->findOneById($id);
+
+        if (null == $car){
+            return $this->redirectToRoute('homepage');
+        }
+
+        /** @var User $currentUser */
+        $currentUser = $this->userService->currentUser();
+        if (!$currentUser->isAdmin() && !$currentUser->isOwner($car)){
+            return $this->redirectToRoute('homepage');
+        }
 
         $form = $this->createForm(CarType::class, $car);
         $form->handleRequest($request);
