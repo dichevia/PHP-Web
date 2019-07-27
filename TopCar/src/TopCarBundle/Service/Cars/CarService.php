@@ -54,4 +54,5 @@ class CarService implements CarServiceInterface
     {
         return $this->carRepository->getFirstMostViewed();
     }
+
 }

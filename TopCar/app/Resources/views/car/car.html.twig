@@ -14,7 +14,7 @@
                 <h1 class="mt-4">{{ car.brand }} {{ car.model }}</h1>
                 <div class="pull-right">
 
-                    {% if  app.getUser().isAdmin() %}
+                    {% if  app.getUser and app.getUser().isAdmin() %}
                         <a class="btn btn-outline-success" href="{{ path('car_edit', {'id': car.id}) }}">Edit
                             &raquo;</a>
                         <a class="btn btn-outline-danger"
@@ -38,7 +38,7 @@
                 <hr>
 
                 <!-- Preview Image -->
-                <img class="img-fluid rounded" src="{{ car.image }}" alt="">
+                <img class="img-fluid rounded" src="{{ asset('uploads/cars/images/' ~ car.image ) }}" alt="">
 
                 <hr>
 
@@ -48,20 +48,22 @@
 
                 <hr>
 
-                <p><b>Body Type:</b> {{ car.body }}</p>
-
-                <p><b>Year manufactured:</b> {{ car.year }}</p>
-
-                <p><b>Fuel Type:</b> {{ car.fuel }}</p>
-
-                <p><b>Power:</b> {{ car.power }}hp</p>
-
-                <p><b>Acceleration 0 to 100km/h:</b> {{ car.acceleration }}sec</p>
-
-                <p><b>Top Speed:</b> {{ car.topSpeed }} km/h</p>
+                <dl class="row">
+                    <dt class="col-sm-3">Body Type</dt>
+                    <dd class="col-sm-9">{{ car.body }}</dd>
+                    <dt class="col-sm-3 text-truncate">Year manufactured</dt>
+                    <dd class="col-sm-9">{{ car.year }}</dd>
+                    <dt class="col-sm-3">Fuel Type</dt>
+                    <dd class="col-sm-9">{{ car.fuel }}</dd>
+                    <dt class="col-sm-3">Power</dt>
+                    <dd class="col-sm-9">{{ car.power }}hp</dd>
+                    <dt class="col-sm-3">Acceleration</dt>
+                    <dd class="col-sm-9">{{ car.acceleration }}sec</dd>
+                    <dt class="col-sm-3">Top Speed</dt>
+                    <dd class="col-sm-9">{{ car.topSpeed }} km/h</dd>
+                </dl>
 
                 <hr>
-
                 <!-- Comments Form -->
                 <div class="card my-4">
                     <h5 class="card-header">Leave a Comment:</h5>

@@ -4,7 +4,7 @@
 
 {% block main %}
     <div class="signup-form">
-        <form action="{{ path('car_edit', {id: car.id}) }}" method="post">
+        <form action="{{ path('car_edit', {id: car.id}) }}" enctype="multipart/form-data" method="post">
             <h2>Edit Car</h2>
             <p class="hint-text">Make changes to your car.</p>
 
@@ -66,8 +66,12 @@
                        required="required"></div>
             <div class="form-group">
                 Image:
-                <input type="text" class="form-control" name="car[image]" value="{{ car.image }}"
-                       required="required"></div>
+                <div class="form-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="inputGroupFile01"
+                               aria-describedby="inputGroupFileAddon01" name="car[new_image]">
+                        <label class="custom-file-label" for="inputGroupFile01">Choose image</label>
+                    </div></div>
             {{ form_row(form._token) }}
             <div class="form-group">
                 <button type="submit" class="btn btn-success btn-lg btn-block">Edit</button>

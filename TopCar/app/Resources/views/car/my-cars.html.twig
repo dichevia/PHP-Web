@@ -23,7 +23,7 @@
                 <tbody>
                 {% for car in cars %}
                     <tr>
-                        <td><img src="{{ car.image }}" height="50" width="80"></td>
+                        <td><img class="img-thumbnail" src="{{ asset('uploads/cars/images/' ~ car.image ) }}" height="54" width="92"></td>
                         <td>{{ car.brand }}</td>
                         <td>{{ car.model }}</td>
                         <td><a class="btn btn-outline-info" href="{{ path('car_view', {'id': car.id}) }}">View

@@ -4,6 +4,7 @@ namespace TopCarBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,7 @@ use TopCarBundle\Service\Cars\BodyServiceInterface;
 use TopCarBundle\Service\Cars\BrandServiceInterface;
 use TopCarBundle\Service\Cars\CarServiceInterface;
 use TopCarBundle\Service\Cars\FuelServiceInterface;
+use TopCarBundle\Service\ImageUploader\ImageUploadInterface;
 use TopCarBundle\Service\Users\UserServiceInterface;
 
 class CarController extends Controller
@@ -40,6 +42,8 @@ class CarController extends Controller
      */
     private $fuelService;
 
+    private $imageUploader;
+
     /**
      * CarController constructor.
      * @param CarServiceInterface $carService
@@ -52,13 +56,15 @@ class CarController extends Controller
                                 UserServiceInterface $userService,
                                 BrandServiceInterface $brandService,
                                 BodyServiceInterface $bodyService,
-                                FuelServiceInterface $fuelService)
+                                FuelServiceInterface $fuelService,
+                                ImageUploadInterface $imageUpload)
     {
         $this->carService = $carService;
         $this->userService = $userService;
         $this->brandService = $brandService;
         $this->bodyService = $bodyService;
         $this->fuelService = $fuelService;
+        $this->imageUploader = $imageUpload;
     }
 
     /**
@@ -95,6 +101,7 @@ class CarController extends Controller
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
      * @return RedirectResponse|Response
+     * @throws \Exception
      */
     public function createProcess(Request $request)
     {
@@ -102,6 +109,13 @@ class CarController extends Controller
 
         $form = $this->createForm(CarType::class, $car);
         $form->handleRequest($request);
+        /** @var UploadedFile $imageFile */
+
+        $imageFile = $form['image']->getData();
+        if ($imageFile) {
+            $imageName = $this->imageUploader->upload($imageFile);
+            $car->setImage($imageName);
+        }
 
         $car->setOwner($this->getUser());
         $car->setViewCount(0);
@@ -147,13 +161,13 @@ class CarController extends Controller
         $bodies = $this->bodyService->findAll();
         $fuels = $this->fuelService->findAll();
 
-        if (null == $car){
+        if (null == $car) {
             return $this->redirectToRoute('homepage');
         }
 
         /** @var User $currentUser */
         $currentUser = $this->userService->currentUser();
-        if (!$currentUser->isAdmin() && !$currentUser->isOwner($car)){
+        if (!$currentUser->isAdmin() && !$currentUser->isOwner($car)) {
             return $this->redirectToRoute('homepage');
         }
 
@@ -185,13 +199,19 @@ class CarController extends Controller
         /** @var Car $car */
         $car = $this->carService->findOneById($id);
 
-
         $form = $this->createForm(CarType::class, $car);
         $form->handleRequest($request);
 
+        /** @var UploadedFile $imageFile */
+
+        $imageFile = $form->getExtraData()['new_image'];
+
+        if ($imageFile) {
+            $imageName = $this->imageUploader->upload($imageFile);
+            $car->setImage($imageName);
+        }
         $car->setOwner($car->getOwner());
         $car->setViewCount($car->getViewCount());
-
         $this->carService->edit($car);
 
         return $this->redirectToRoute('car_view', ['id' => $car->getId()]);
@@ -212,7 +232,6 @@ class CarController extends Controller
     }
 
 
-
     /**
      * @param Request $request
      * @param $id
@@ -228,13 +247,13 @@ class CarController extends Controller
         /*** @var Car $car */
         $car = $this->carService->findOneById($id);
 
-        if (null == $car){
+        if (null == $car) {
             return $this->redirectToRoute('homepage');
         }
 
         /** @var User $currentUser */
         $currentUser = $this->userService->currentUser();
-        if (!$currentUser->isAdmin() && !$currentUser->isOwner($car)){
+        if (!$currentUser->isAdmin() && !$currentUser->isOwner($car)) {
             return $this->redirectToRoute('homepage');
         }
 

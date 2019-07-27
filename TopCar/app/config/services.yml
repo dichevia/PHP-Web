@@ -33,3 +33,6 @@ services:
     # TopCarBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
+    TopCarBundle\Service\ImageUploader\ImageUploader:
+        arguments:
+            $targetDirectory: '%images_directory%'

@@ -3,8 +3,10 @@
 namespace TopCarBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CarType extends AbstractType
@@ -23,7 +25,18 @@ class CarType extends AbstractType
             ->add('power')
             ->add('topSpeed')
             ->add('acceleration')
-            ->add('image');
+            ->add('image', FileType::class,
+                [
+                    'mapped'=>false,
+                    'required' =>false,
+                    'constraints' =>[
+                        new \Symfony\Component\Validator\Constraints\File([
+                            'maxSize'=>'1024k',
+                            'mimeTypes'=>'image/*',
+                            'mimeTypesMessage' => 'Please upload a valid image file'
+                        ])
+                    ]
+                ]);
     }/**
      * {@inheritdoc}
      */
