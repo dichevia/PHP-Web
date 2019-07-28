@@ -167,3 +167,9 @@ table.table-striped tbody tr:nth-of-type(odd) {
 .pull-right {
   float: right !important;
 }
+
+.jumbotron{
+  background-image: url(https://porschepde.blob.core.windows.net/media/0/0/149354/default.jpg);
+  background-size: cover;
+  height: 100%;
+}

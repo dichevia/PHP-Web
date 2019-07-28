@@ -4,6 +4,7 @@ namespace TopCarBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use TopCarBundle\Service\Cars\CarServiceInterface;
 
@@ -25,6 +26,8 @@ class DefaultController extends Controller
 
     /**
      * @Route("/", name="homepage")
+     * @param Request $request
+     * @return Response
      */
     public function index(Request $request)
     {

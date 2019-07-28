@@ -35,14 +35,6 @@ class CarRepository extends \Doctrine\ORM\EntityRepository
         }
     }
 
-    public function getFirstMostViewed()
-    {
-        return $this->createQueryBuilder('car')
-            ->orderBy('car.viewCount', 'DESC')
-            ->setMaxResults(4)
-            ->getQuery()
-            ->getResult();
-    }
 
     public function remove($car)
     {
@@ -66,5 +58,33 @@ class CarRepository extends \Doctrine\ORM\EntityRepository
         }
     }
 
+    public function getFirstMostViewed()
+    {
+        return $this->createQueryBuilder('car')
+            ->orderBy('car.viewCount', 'DESC')
+            ->setMaxResults(4)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getAllByDate()
+    {
+        return $this->createQueryBuilder('car')
+            ->orderBy('car.dateAdded', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    public function getAllByBody($type)
+    {
+        return $this->createQueryBuilder('c')
+            ->addSelect('b')
+            ->innerJoin("c.body", 'b')
+            ->where('b.type=:type')
+            ->setParameter('type', $type)
+            ->getQuery()
+            ->getResult();
+    }
 
 }

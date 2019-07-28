@@ -51,6 +51,7 @@ class CarController extends Controller
      * @param BrandServiceInterface $brandService
      * @param BodyServiceInterface $bodyService
      * @param FuelServiceInterface $fuelService
+     * @param ImageUploadInterface $imageUpload
      */
     public function __construct(CarServiceInterface $carService,
                                 UserServiceInterface $userService,
@@ -132,6 +133,7 @@ class CarController extends Controller
      */
     public function view($id)
     {
+        $bodies = $this->bodyService->findAll();
         /*** @var Car $car */
         $car = $this->carService->findOneById($id);
 
@@ -142,7 +144,7 @@ class CarController extends Controller
         $car->setViewCount($car->getViewCount() + 1);
         $this->carService->save($car);
 
-        return $this->render('car/car.html.twig', ['car' => $car]);
+        return $this->render('car/car.html.twig', ['car' => $car, 'bodies' => $bodies]);
     }
 
     /**
@@ -266,5 +268,30 @@ class CarController extends Controller
 
         return $this->redirectToRoute('my_cars');
     }
+
+    /**
+     * @Route("/cars/all", name="car_all")
+     */
+    public function all()
+    {
+
+        $cars = $this->carService->findAllByDate();
+
+        return $this->render('car/cars.html.twig', ['cars' => $cars, 'title' => 'All cars']);
+    }
+
+    /**
+     * @Route("/cars/body/{type}", name="car_body")
+     *
+     * @param $type
+     * @return Response
+     */
+    public function allByBody($type)
+    {
+        $cars = $this->carService->findAllByBody($type);
+
+        return $this->render('car/cars.html.twig', ['cars' => $cars, 'title' => $type]);
+    }
+
 
 }

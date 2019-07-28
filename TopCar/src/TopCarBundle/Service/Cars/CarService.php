@@ -35,9 +35,9 @@ class CarService implements CarServiceInterface
         return $this->carRepository->remove($car);
     }
 
-    public function findAll()
+    public function findAllByDate()
     {
-        return $this->carRepository->findAll();
+        return $this->carRepository->getAllByDate();
     }
 
     public function findOneById(int $id)
@@ -55,4 +55,9 @@ class CarService implements CarServiceInterface
         return $this->carRepository->getFirstMostViewed();
     }
 
+
+    public function findAllByBody($type)
+    {
+        return $this->carRepository->getAllByBody($type);
+    }
 }

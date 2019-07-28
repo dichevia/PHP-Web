@@ -8,27 +8,30 @@
         <!-- Jumbotron Header -->
         <header class="jumbotron my-4">
 
-            <h1 class="display-2">A Warm Welcome!</h1>
-            <p class="lead">Add your favorite cars. Or browse cars, added by other users!  </p>
-
+            <h1 class="display-4">Welcome to TopCar!</h1>
+            <p class="lead text-black-50">Add your favorite cars. </p>
+            <p>
+                <a href="{{ path('car_all') }}" class="btn btn-primary my-1">Browse all cars!</a>
+            </p>
         </header>
-
-
-
+        <hr>
+        <p class="lead text-lg-center">Most viewed </p>
+        <hr>
         <!-- Page Features -->
         <div class="row text-center">
             {% for car in cars %}
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card h-100">
-                    <img class="card-img-top" src="{{ asset('uploads/cars/images/' ~ car.image ) }}" alt="">
-                    <div class="card-body">
-                        <h4 class="card-title">{{ car.brand }} {{ car.model }}</h4>
-                    </div>
-                    <div class="card-footer">
-                        <a href="{{ path('car_view', {'id':car.id}) }}" class="btn btn-primary">Find Out More!</a>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="{{ asset('uploads/cars/images/' ~ car.image ) }}" alt="">
+                        <div class="card-body">
+                            <h4 class="card-title">{{ car.brand }} {{ car.model }}</h4>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{{ path('car_view', {'id':car.id}) }}" class="btn btn-sm btn-outline-primary">Find
+                                Out More!</a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
 
 
