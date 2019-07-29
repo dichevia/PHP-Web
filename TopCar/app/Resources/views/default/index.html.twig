@@ -8,12 +8,54 @@
         <!-- Jumbotron Header -->
         <header class="jumbotron my-4">
 
-            <h1 class="display-4">Welcome to TopCar!</h1>
-            <p class="lead text-black-50">Add your favorite cars. </p>
             <p>
-                <a href="{{ path('car_all') }}" class="btn btn-primary my-1">Browse all cars!</a>
+                <a href="{{ path('car_all') }}" id="jumbotron-button" class="btn btn-primary my-1 align-bottom">Browse all cars!</a>
             </p>
         </header>
+        <div class="card my-4">
+            <h5 class="card-header">Brands</h5>
+            <div class="card-body">
+                <div class="row">
+                    {% for brand in brands %}
+                        <div class="col-sm-2">
+
+                            <ul class="list-unstyled mb-8">
+
+                                <li>
+                                    <a href="{{ path('car_brand', {'brand':brand.name}) }}">
+                                        <img src="{{ asset('uploads/cars/brands/' ~ brand.image) }}" height="80" alt="none">
+                                        </a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="card my-4">
+            <h5 class="card-header">Categories</h5>
+            <div class="card-body">
+                <div class="row">
+                    {% for body in bodies %}
+                        <div class="col-lg-4">
+
+                            <ul class="list-unstyled mb-0">
+
+                                <li>
+                                    <a href="{{ path('car_body', {'type':body.type}) }}">
+                                        <img src="{{ asset('uploads/cars/types/' ~ body.image) }}" height="100" width="150" alt="none">
+                                        {{ body.type }}</a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
         <hr>
         <p class="lead text-lg-center">Most viewed </p>
         <hr>

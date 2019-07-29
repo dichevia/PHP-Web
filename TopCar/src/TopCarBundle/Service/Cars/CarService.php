@@ -60,4 +60,10 @@ class CarService implements CarServiceInterface
     {
         return $this->carRepository->getAllByBody($type);
     }
+
+    public function findAllByBrand($brand)
+    {
+        return $this->carRepository->getAllByBrand($brand);
+
+    }
 }

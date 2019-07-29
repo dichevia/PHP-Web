@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use TopCarBundle\Service\Cars\BodyServiceInterface;
+use TopCarBundle\Service\Cars\BrandServiceInterface;
 use TopCarBundle\Service\Cars\CarServiceInterface;
 
 class DefaultController extends Controller
@@ -16,12 +18,28 @@ class DefaultController extends Controller
     private $carService;
 
     /**
+     * @var BodyServiceInterface
+     */
+    private $bodyService;
+
+    /**
+     * @var BrandServiceInterface
+     */
+    private $brandService;
+
+    /**
      * DefaultController constructor.
      * @param CarServiceInterface $carService
+     * @param BodyServiceInterface $bodyService
+     * @param BrandServiceInterface $brandService
      */
-    public function __construct(CarServiceInterface $carService)
+    public function __construct(CarServiceInterface $carService,
+                                BodyServiceInterface $bodyService,
+                                BrandServiceInterface $brandService)
     {
         $this->carService = $carService;
+        $this->bodyService = $bodyService;
+        $this->brandService = $brandService;
     }
 
     /**
@@ -32,9 +50,13 @@ class DefaultController extends Controller
     public function index(Request $request)
     {
         $mostViewedCars = $this->carService->findFirstMostViewed();
+        $bodies = $this->bodyService->findAll();
+        $brands = $this->brandService->findAll();
         return $this->render('default/index.html.twig',
             [
-                'cars' => $mostViewedCars
-        ]);
+                'cars' => $mostViewedCars,
+                'bodies' => $bodies,
+                'brands' => $brands
+            ]);
     }
 }

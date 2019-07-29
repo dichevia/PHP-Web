@@ -22,4 +22,6 @@ interface CarServiceInterface
     public function findFirstMostViewed();
 
     public function findAllByBody($type);
+
+    public function findAllByBrand($brand);
 }

@@ -36,6 +36,13 @@ class Brand
      */
     private $cars;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="image", type="string", length=255)
+     */
+    private $image;
+
     public function __construct()
     {
         $this->cars = new ArrayCollection();
@@ -95,5 +102,21 @@ class Brand
     public function __toString()
     {
         return (string) $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImage(): string
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param string $image
+     */
+    public function setImage(string $image): void
+    {
+        $this->image = $image;
     }
 }

@@ -134,6 +134,7 @@ class CarController extends Controller
     public function view($id)
     {
         $bodies = $this->bodyService->findAll();
+        $brands = $this->brandService->findAll();
         /*** @var Car $car */
         $car = $this->carService->findOneById($id);
 
@@ -144,7 +145,7 @@ class CarController extends Controller
         $car->setViewCount($car->getViewCount() + 1);
         $this->carService->save($car);
 
-        return $this->render('car/car.html.twig', ['car' => $car, 'bodies' => $bodies]);
+        return $this->render('car/car.html.twig', ['car' => $car, 'bodies' => $bodies, 'brands'=> $brands]);
     }
 
     /**
@@ -291,6 +292,20 @@ class CarController extends Controller
         $cars = $this->carService->findAllByBody($type);
 
         return $this->render('car/cars.html.twig', ['cars' => $cars, 'title' => $type]);
+    }
+
+    /**
+     * @Route("/cars/brand/{brand}", name="car_brand")
+     *
+     * @param $brand
+     * @return Response
+     */
+    public function allByBrand($brand)
+    {
+
+        $cars = $this->carService->findAllByBrand($brand);
+
+        return $this->render('car/cars.html.twig', ['cars' => $cars, 'title' => $brand]);
     }
 
 

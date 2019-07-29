@@ -87,4 +87,16 @@ class CarRepository extends \Doctrine\ORM\EntityRepository
             ->getResult();
     }
 
+    public function getAllByBrand($brand)
+    {
+        return $this->createQueryBuilder('c')
+            ->addSelect('b')
+            ->innerJoin("c.brand", 'b')
+            ->where('b.name=:brand')
+            ->setParameter('brand', $brand)
+            ->getQuery()
+            ->getResult();
+
+    }
+
 }
