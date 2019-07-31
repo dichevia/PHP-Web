@@ -5,6 +5,7 @@ namespace TopCarBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * User
@@ -47,7 +48,7 @@ class User implements UserInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="lastName", type="string", length=255)
+     * @ORM\Column(name="lastName", type="string", length=255 )
      */
     private $lastName;
 
@@ -69,10 +70,18 @@ class User implements UserInterface
      */
     private $roles;
 
+    /**
+     * @var ArrayCollection|Comment[]
+     *
+     * @ORM\OneToMany(targetEntity="TopCarBundle\Entity\Comment", mappedBy="author")
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->cars = new ArrayCollection();
         $this->roles = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
 
@@ -283,5 +292,21 @@ class User implements UserInterface
     public function isAdmin()
     {
         return in_array('ROLE_ADMIN', $this->getRoles());
+    }
+
+    /**
+     * @return ArrayCollection|Comment[]
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param ArrayCollection|Comment[] $comments
+     */
+    public function setComments($comments): void
+    {
+        $this->comments = $comments;
     }
 }

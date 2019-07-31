@@ -2,6 +2,7 @@
 
 namespace TopCarBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -116,9 +117,18 @@ class Car
      */
     private $dateAdded;
 
+    /**
+     * @var ArrayCollection|Comment[]
+     *
+     * @ORM\OneToMany(targetEntity="TopCarBundle\Entity\Comment", mappedBy="car")
+     */
+    private $comments;
+
 public function __construct()
 {
     $this->dateAdded = new \DateTime();
+
+    $this->comments = new ArrayCollection();
 }
 
     /**
@@ -391,6 +401,22 @@ public function __construct()
     public function setDateAdded(\DateTime $dateAdded): void
     {
         $this->dateAdded = $dateAdded;
+    }
+
+    /**
+     * @return ArrayCollection|Comment[]
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param ArrayCollection|Comment[] $comments
+     */
+    public function setComments($comments): void
+    {
+        $this->comments = $comments;
     }
 
 

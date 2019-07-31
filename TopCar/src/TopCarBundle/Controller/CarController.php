@@ -16,6 +16,7 @@ use TopCarBundle\Service\Cars\BodyServiceInterface;
 use TopCarBundle\Service\Cars\BrandServiceInterface;
 use TopCarBundle\Service\Cars\CarServiceInterface;
 use TopCarBundle\Service\Cars\FuelServiceInterface;
+use TopCarBundle\Service\Comments\CommentServiceInterface;
 use TopCarBundle\Service\ImageUploader\ImageUploadInterface;
 use TopCarBundle\Service\Users\UserServiceInterface;
 
@@ -41,6 +42,10 @@ class CarController extends Controller
      * @var FuelServiceInterface
      */
     private $fuelService;
+    /**
+     * @var CommentServiceInterface
+     */
+    private $commentService;
 
     private $imageUploader;
 
@@ -51,6 +56,7 @@ class CarController extends Controller
      * @param BrandServiceInterface $brandService
      * @param BodyServiceInterface $bodyService
      * @param FuelServiceInterface $fuelService
+     * @param CommentServiceInterface $commentService
      * @param ImageUploadInterface $imageUpload
      */
     public function __construct(CarServiceInterface $carService,
@@ -58,6 +64,7 @@ class CarController extends Controller
                                 BrandServiceInterface $brandService,
                                 BodyServiceInterface $bodyService,
                                 FuelServiceInterface $fuelService,
+                                CommentServiceInterface $commentService,
                                 ImageUploadInterface $imageUpload)
     {
         $this->carService = $carService;
@@ -65,6 +72,7 @@ class CarController extends Controller
         $this->brandService = $brandService;
         $this->bodyService = $bodyService;
         $this->fuelService = $fuelService;
+        $this->commentService = $commentService;
         $this->imageUploader = $imageUpload;
     }
 
@@ -128,7 +136,7 @@ class CarController extends Controller
     /**
      * @param $id
      *
-     * @Route("/car/view/{id}", name="car_view")
+     * @Route("/car/view/{id}", name="car_view", methods={"GET"})
      * @return Response
      */
     public function view($id)
@@ -137,6 +145,8 @@ class CarController extends Controller
         $brands = $this->brandService->findAll();
         /*** @var Car $car */
         $car = $this->carService->findOneById($id);
+        $comments = $this->commentService->findAllByDate($id);
+
 
         if ($car === null) {
             return $this->redirectToRoute("homepage");
@@ -145,7 +155,11 @@ class CarController extends Controller
         $car->setViewCount($car->getViewCount() + 1);
         $this->carService->save($car);
 
-        return $this->render('car/car.html.twig', ['car' => $car, 'bodies' => $bodies, 'brands'=> $brands]);
+        return $this->render('car/car.html.twig', [
+            'car' => $car,
+            'bodies' => $bodies,
+            'brands' => $brands,
+            'comments' => $comments]);
     }
 
     /**
