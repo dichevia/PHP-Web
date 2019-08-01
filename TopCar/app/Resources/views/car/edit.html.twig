@@ -3,6 +3,24 @@
 {% block body_id 'edit' %}
 
 {% block main %}
+
+    {% if not form.vars.valid %}
+        <div class="alert alert-error">
+
+            <div class="alert alert-warning alert-dismissible fade show">
+                <strong>Warning!</strong>
+            {% for children in form.children %}
+                {% if not children.vars.valid %}
+
+                        {{ form_errors(children) }}
+
+                {% endif %}
+            {% endfor %}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="signup-form">
         <form action="{{ path('car_edit', {id: car.id}) }}" enctype="multipart/form-data" method="post">
             <h2>Edit Car</h2>
@@ -71,11 +89,12 @@
                         <input type="file" class="custom-file-input" id="inputGroupFile01"
                                aria-describedby="inputGroupFileAddon01" name="car[new_image]">
                         <label class="custom-file-label" for="inputGroupFile01">Choose image</label>
-                    </div></div>
-            {{ form_row(form._token) }}
-            <div class="form-group">
-                <button type="submit" class="btn btn-success btn-lg btn-block">Edit</button>
-            </div>
+                    </div>
+                </div>
+                {{ form_row(form._token) }}
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-lg btn-block">Edit</button>
+                </div>
         </form>
     </div>
 {% endblock %}

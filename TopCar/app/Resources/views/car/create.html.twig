@@ -3,6 +3,23 @@
 {% block body_id 'create' %}
 
 {% block main %}
+    {% if not form.vars.valid %}
+        <div class="alert alert-error">
+
+            <div class="alert alert-warning alert-dismissible fade show">
+                <strong>Warning!</strong>
+                {% for children in form.children %}
+                    {% if not children.vars.valid %}
+
+                        {{ form_errors(children) }}
+
+                    {% endif %}
+                {% endfor %}
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="signup-form">
         <form action="{{ path('car_create') }}" enctype="multipart/form-data" method="post">
             <h2>Add Car</h2>

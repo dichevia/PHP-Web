@@ -2,8 +2,10 @@
 
 namespace TopCarBundle\Controller;
 
+use Exception as ExceptionAlias;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,19 +89,17 @@ class CarController extends Controller
     public function create(Request $request)
     {
         $car = new Car();
-        $brands = $this->brandService->findAll();
-        $bodies = $this->bodyService->findAll();
-        $fuels = $this->fuelService->findAll();
 
-        $form = $this->createForm(CarType::class, $car);
-        $form->handleRequest($request);
+        list($brands, $bodies, $fuels) = $this->createCarAttributes();
+
+        $form = $this->createAndHandleForm($request, $car);
 
         return $this->render('car/create.html.twig',
             [
                 'form' => $form->createView(),
                 'brands' => $brands,
                 'bodies' => $bodies,
-                'fuels' => $fuels
+                'fuels' => $fuels,
             ]);
     }
 
@@ -110,26 +110,28 @@ class CarController extends Controller
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
      * @return RedirectResponse|Response
-     * @throws \Exception
+     * @throws ExceptionAlias
      */
     public function createProcess(Request $request)
     {
         $car = new Car();
 
-        $form = $this->createForm(CarType::class, $car);
-        $form->handleRequest($request);
-        /** @var UploadedFile $imageFile */
+        $form = $this->createAndHandleForm($request, $car);
 
+        /** @var UploadedFile $imageFile */
         $imageFile = $form['image']->getData();
         if ($imageFile) {
-            $imageName = $this->imageUploader->upload($imageFile);
-            $car->setImage($imageName);
+            $this->addImage($imageFile, $car);
         }
 
         $car->setOwner($this->getUser());
         $car->setViewCount(0);
-        $this->carService->save($car);
 
+        if (!$form->isValid()) {
+            return $this->renderErrors('car/create.html.twig', $car, $form);
+        }
+
+        $this->carService->save($car);
         return $this->redirectToRoute('homepage');
     }
 
@@ -174,9 +176,7 @@ class CarController extends Controller
     public function edit(Request $request, $id)
     {
         $car = $this->carService->findOneById($id);
-        $brands = $this->brandService->findAll();
-        $bodies = $this->bodyService->findAll();
-        $fuels = $this->fuelService->findAll();
+        list($brands, $bodies, $fuels) = $this->createCarAttributes();
 
         if (null == $car) {
             return $this->redirectToRoute('homepage');
@@ -189,8 +189,7 @@ class CarController extends Controller
         }
 
 
-        $form = $this->createForm(CarType::class, $car);
-        $form->handleRequest($request);
+        $form = $this->createAndHandleForm($request, $car);
 
         return $this->render('car/edit.html.twig',
             [
@@ -198,7 +197,7 @@ class CarController extends Controller
                 'car' => $car,
                 'brands' => $brands,
                 'bodies' => $bodies,
-                'fuels' => $fuels
+                'fuels' => $fuels,
             ]);
     }
 
@@ -216,19 +215,20 @@ class CarController extends Controller
         /** @var Car $car */
         $car = $this->carService->findOneById($id);
 
-        $form = $this->createForm(CarType::class, $car);
-        $form->handleRequest($request);
+        $form = $this->createAndHandleForm($request, $car);
 
         /** @var UploadedFile $imageFile */
 
         $imageFile = $form->getExtraData()['new_image'];
 
         if ($imageFile) {
-            $imageName = $this->imageUploader->upload($imageFile);
-            $car->setImage($imageName);
+            $this->addImage($imageFile, $car);
         }
         $car->setOwner($car->getOwner());
         $car->setViewCount($car->getViewCount());
+        if (!$form->isValid()) {
+            return $this->renderErrors('car/edit.html.twig', $car, $form);
+        }
         $this->carService->edit($car);
 
         return $this->redirectToRoute('car_view', ['id' => $car->getId()]);
@@ -274,8 +274,7 @@ class CarController extends Controller
             return $this->redirectToRoute('homepage');
         }
 
-        $form = $this->createForm(CarType::class, $car);
-        $form->handleRequest($request);
+        $form = $this->createAndHandleForm($request, $car);
 
         $car->setOwner($car->getOwner());
         $car->setViewCount($car->getViewCount());
@@ -322,5 +321,58 @@ class CarController extends Controller
         return $this->render('car/cars.html.twig', ['cars' => $cars, 'title' => $brand]);
     }
 
+    /**
+     * @param UploadedFile $imageFile
+     * @param Car $car
+     */
+    private function addImage(UploadedFile $imageFile, Car $car)
+    {
+        $imageName = $this->imageUploader->upload($imageFile);
+        $car->setImage($imageName);
+    }
+
+    /**
+     * @return array
+     */
+    private function createCarAttributes()
+    {
+        $brands = $this->brandService->findAll();
+        $bodies = $this->bodyService->findAll();
+        $fuels = $this->fuelService->findAll();
+        return array($brands, $bodies, $fuels);
+    }
+
+    /**
+     * @param Request $request
+     * @param Car $car
+     * @return FormInterface
+     */
+    private function createAndHandleForm(Request $request, Car $car)
+    {
+        $form = $this->createForm(CarType::class, $car);
+        $form->handleRequest($request);
+        return $form;
+    }
+
+    /**
+     * @param $view
+     * @param $car
+     * @param FormInterface $form
+     * @return Response
+     */
+    private function renderErrors($view, $car, FormInterface $form)
+    {
+
+        list($brands, $bodies, $fuels) = $this->createCarAttributes();
+        return $this->render($view,
+            [
+                'form' => $form->createView(),
+                'car' => $car,
+                'brands' => $brands,
+                'bodies' => $bodies,
+                'fuels' => $fuels,
+                'errors' => $form->getErrors()
+            ]);
+    }
 
 }

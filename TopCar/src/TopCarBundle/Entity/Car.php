@@ -4,6 +4,7 @@ namespace TopCarBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Car
@@ -34,6 +35,8 @@ class Car
     /**
      * @var string
      *
+     * @Assert\NotBlank(message="Model should not be blank!")
+     *
      * @ORM\Column(name="model", type="string", length=255)
      */
     private $model;
@@ -48,6 +51,7 @@ class Car
 
     /**
      * @var string
+     * @Assert\NotBlank(message="Year should not be blank!")
      *
      * @ORM\Column(name="year", type="string", length=255)
      */
@@ -62,6 +66,7 @@ class Car
 
     /**
      * @var int
+     * @Assert\NotBlank(message="Power should not be blank!")
      *
      * @ORM\Column(name="power", type="integer")
      */
@@ -69,6 +74,7 @@ class Car
 
     /**
      * @var int
+     * @Assert\NotBlank(message="Top Speed should not be blank!")
      *
      * @ORM\Column(name="topSpeed", type="integer")
      */
@@ -76,6 +82,7 @@ class Car
 
     /**
      * @var float
+     * @Assert\NotBlank(message="Acceleration should not be blank!")
      *
      * @ORM\Column(name="acceleration", type="float", scale=2)
      */
@@ -124,12 +131,12 @@ class Car
      */
     private $comments;
 
-public function __construct()
-{
-    $this->dateAdded = new \DateTime();
+    public function __construct()
+    {
+        $this->dateAdded = new \DateTime();
 
-    $this->comments = new ArrayCollection();
-}
+        $this->comments = new ArrayCollection();
+    }
 
     /**
      * Get id.
