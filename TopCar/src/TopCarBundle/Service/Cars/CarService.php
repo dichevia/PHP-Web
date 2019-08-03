@@ -21,12 +21,17 @@ class CarService implements CarServiceInterface
 
     public function save(Car $car): bool
     {
+        $owner = $this->userService->currentUser();
+        $car->setOwner($owner);
 
         return $this->carRepository->insert($car);
     }
 
     public function edit(Car $car): bool
     {
+        $car->setOwner($this->userService->currentUser());
+        $car->setViewCount($car->getViewCount());
+
         return $this->carRepository->update($car);
     }
 

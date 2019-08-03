@@ -14,6 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Car
 {
+    const INITIAL_VIEW_COUNT = 0;
+
     /**
      * @var int
      *
@@ -136,6 +138,8 @@ class Car
         $this->dateAdded = new \DateTime();
 
         $this->comments = new ArrayCollection();
+
+        $this->viewCount = self::INITIAL_VIEW_COUNT;
     }
 
     /**

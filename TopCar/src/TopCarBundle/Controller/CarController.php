@@ -124,14 +124,12 @@ class CarController extends Controller
             $this->addImage($imageFile, $car);
         }
 
-        $car->setOwner($this->getUser());
-        $car->setViewCount(0);
-
         if (!$form->isValid()) {
             return $this->renderErrors('car/create.html.twig', $car, $form);
         }
 
         $this->carService->save($car);
+
         return $this->redirectToRoute('homepage');
     }
 
@@ -148,7 +146,6 @@ class CarController extends Controller
         /*** @var Car $car */
         $car = $this->carService->findOneById($id);
         $comments = $this->commentService->findAllByDate($id);
-
 
         if ($car === null) {
             return $this->redirectToRoute("homepage");
@@ -224,11 +221,11 @@ class CarController extends Controller
         if ($imageFile) {
             $this->addImage($imageFile, $car);
         }
-        $car->setOwner($car->getOwner());
-        $car->setViewCount($car->getViewCount());
+
         if (!$form->isValid()) {
             return $this->renderErrors('car/edit.html.twig', $car, $form);
         }
+
         $this->carService->edit($car);
 
         return $this->redirectToRoute('car_view', ['id' => $car->getId()]);
