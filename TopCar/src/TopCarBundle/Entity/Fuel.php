@@ -94,6 +94,6 @@ class Fuel
 
     public function __toString()
     {
-        return (string) $this->type;
+        return (string)$this->type;
     }
 }

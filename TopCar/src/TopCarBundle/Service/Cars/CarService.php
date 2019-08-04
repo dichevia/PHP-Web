@@ -71,4 +71,11 @@ class CarService implements CarServiceInterface
         return $this->carRepository->getAllByBrand($brand);
 
     }
+
+    public function updateViews(Car $car): bool
+    {
+        $car->setViewCount($car->getViewCount() + 1);
+
+        return $this->carRepository->insert($car);
+    }
 }

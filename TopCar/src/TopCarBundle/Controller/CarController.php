@@ -48,7 +48,9 @@ class CarController extends Controller
      * @var CommentServiceInterface
      */
     private $commentService;
-
+    /**
+     * @var ImageUploadInterface
+     */
     private $imageUploader;
 
     /**
@@ -151,8 +153,7 @@ class CarController extends Controller
             return $this->redirectToRoute("homepage");
         }
 
-        $car->setViewCount($car->getViewCount() + 1);
-        $this->carService->save($car);
+        $this->carService->updateViews($car);
 
         return $this->render('car/car.html.twig', [
             'car' => $car,
@@ -163,8 +164,8 @@ class CarController extends Controller
 
     /**
      * @param Request $request
-     *
      * @param $id
+     *
      * @return Response
      * @Route("/car/edit/{id}",name="car_edit", methods={"GET"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
@@ -184,7 +185,6 @@ class CarController extends Controller
         if (!$currentUser->isAdmin() && !$currentUser->isOwner($car)) {
             return $this->redirectToRoute('homepage');
         }
-
 
         $form = $this->createAndHandleForm($request, $car);
 
@@ -234,6 +234,7 @@ class CarController extends Controller
     /**
      * @Route("/car/my-cars", name="my_cars")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
      * @return Response
      */
     public function getAllArticlesByUser()
@@ -249,8 +250,8 @@ class CarController extends Controller
     /**
      * @param Request $request
      * @param $id
-     *
      * @return Response
+     *
      * @Route("/car/delete/{id}", name="car_delete", methods={"GET"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
@@ -285,7 +286,6 @@ class CarController extends Controller
      */
     public function all()
     {
-
         $cars = $this->carService->findAllByDate();
 
         return $this->render('car/cars.html.twig', ['cars' => $cars, 'title' => 'All cars']);
@@ -312,7 +312,6 @@ class CarController extends Controller
      */
     public function allByBrand($brand)
     {
-
         $cars = $this->carService->findAllByBrand($brand);
 
         return $this->render('car/cars.html.twig', ['cars' => $cars, 'title' => $brand]);
@@ -359,7 +358,6 @@ class CarController extends Controller
      */
     private function renderErrors($view, $car, FormInterface $form)
     {
-
         list($brands, $bodies, $fuels) = $this->createCarAttributes();
         return $this->render($view,
             [

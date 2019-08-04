@@ -18,6 +18,10 @@ class UserController extends Controller
      */
     private $userService;
 
+    /**
+     * UserController constructor.
+     * @param UserServiceInterface $userService
+     */
     public function __construct(UserServiceInterface $userService)
     {
         $this->userService = $userService;
@@ -51,6 +55,5 @@ class UserController extends Controller
 
         return $this->redirectToRoute("security_login");
     }
-
 
 }

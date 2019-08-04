@@ -16,7 +16,7 @@ use TopCarBundle\Entity\Comment;
 class CommentRepository extends \Doctrine\ORM\EntityRepository
 {
 
-    public function __construct(EntityManagerInterface $em, Mapping\ClassMetadata $metadata=null)
+    public function __construct(EntityManagerInterface $em, Mapping\ClassMetadata $metadata = null)
     {
         parent::__construct($em,
             $metadata == null ?

@@ -56,18 +56,12 @@ class CommentController extends Controller
      */
     public function add($id, Request $request)
     {
-        $car = $this->carService->findOneById($id);
-        $user = $this->userService->currentUser();
         $comment = new Comment();
 
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
-        $comment->setAuthor($user);
-        $comment->setCar($car);
-
-
-        $this->commentService->save($comment);
+        $this->commentService->save($id, $comment);
 
         return $this->redirectToRoute('car_view', ['id' => $id]);
     }

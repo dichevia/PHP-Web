@@ -13,6 +13,8 @@ interface CarServiceInterface
 
     public function remove(Car $car): bool;
 
+    public function updateViews(Car $car):bool;
+
     public function findAllByDate();
 
     public function findOneById(int $id);

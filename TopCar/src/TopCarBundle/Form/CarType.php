@@ -4,6 +4,7 @@ namespace TopCarBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\File\File;
@@ -19,13 +20,13 @@ class CarType extends AbstractType
     {
         $builder
             ->add('brand')
-            ->add('model')
+            ->add('model', TextType::class)
             ->add('body')
-            ->add('year')
+            ->add('year', NumberType::class)
             ->add('fuel')
-            ->add('power')
-            ->add('topSpeed')
-            ->add('acceleration')
+            ->add('power', NumberType::class)
+            ->add('topSpeed', NumberType::class)
+            ->add('acceleration', NumberType::class)
             ->add('image', FileType::class,
                 [
                     'mapped' => false,

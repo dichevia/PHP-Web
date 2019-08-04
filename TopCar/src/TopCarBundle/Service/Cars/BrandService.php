@@ -22,6 +22,6 @@ class BrandService implements BrandServiceInterface
 
     public function findOneById($id)
     {
-       return $this->brandRepository->find($id);
+        return $this->brandRepository->find($id);
     }
 }

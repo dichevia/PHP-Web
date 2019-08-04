@@ -4,7 +4,10 @@
 namespace TopCarBundle\Service\Comments;
 
 
+use TopCarBundle\Entity\Comment;
 use TopCarBundle\Repository\Comments\CommentRepository;
+use TopCarBundle\Service\Cars\CarServiceInterface;
+use TopCarBundle\Service\Users\UserServiceInterface;
 
 class CommentService implements CommentServiceInterface
 {
@@ -14,17 +17,42 @@ class CommentService implements CommentServiceInterface
     private $commentRepository;
 
     /**
+     * @var CarServiceInterface
+     */
+    private $carService;
+
+    /**
+     * @var UserServiceInterface
+     */
+    private $userService;
+
+    /**
      * CommentService constructor.
      * @param CommentRepository $commentRepository
+     * @param CarServiceInterface $carService
+     * @param UserServiceInterface $userService
      */
-    public function __construct(CommentRepository $commentRepository)
+    public function __construct(CommentRepository $commentRepository,
+                                CarServiceInterface $carService,
+                                UserServiceInterface $userService)
     {
         $this->commentRepository = $commentRepository;
+        $this->carService = $carService;
+        $this->userService = $userService;
     }
 
-
-    public function save($comment)
+    /**
+     * @param $id
+     * @param Comment $comment
+     * @return bool
+     */
+    public function save($id, $comment)
     {
+        $car = $this->carService->findOneById($id);
+        $user = $this->userService->currentUser();
+        $comment->setAuthor($user);
+        $comment->setCar($car);
+
         return $this->commentRepository->insert($comment);
     }
 
