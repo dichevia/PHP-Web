@@ -51,6 +51,11 @@ class UserController extends Controller
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
+        if (!$form->isValid()){
+
+            return $this->render("user/register.html.twig",
+                ['form' => $form->createView(), 'errors'=>$form->getErrors()]);
+        }
         $this->userService->save($user);
 
         return $this->redirectToRoute("security_login");
