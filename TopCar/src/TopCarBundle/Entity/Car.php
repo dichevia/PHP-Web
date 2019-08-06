@@ -54,7 +54,7 @@ class Car
     /**
      * @var string
      * @Assert\NotBlank(message="Year should not be blank!")
-     *
+     * @Assert\Regex("/^(19|20)\d{2}$/", message="Please enter valid year.")
      * @ORM\Column(name="year", type="string", length=255)
      */
     private $year;
@@ -68,8 +68,9 @@ class Car
 
     /**
      * @var int
-     * @Assert\NotBlank(message="Power should not be blank!")
      *
+     * @Assert\NotBlank(message="Power should not be blank!")
+     * @Assert\Regex("/^\d{2,4}$/", message="Please enter valid power.")
      * @ORM\Column(name="power", type="integer")
      */
     private $power;
@@ -77,7 +78,7 @@ class Car
     /**
      * @var int
      * @Assert\NotBlank(message="Top Speed should not be blank!")
-     *
+     * @Assert\Regex("/^\d{2,4}$/", message="Please enter valid top speed.")
      * @ORM\Column(name="topSpeed", type="integer")
      */
     private $topSpeed;
@@ -85,7 +86,7 @@ class Car
     /**
      * @var float
      * @Assert\NotBlank(message="Acceleration should not be blank!")
-     *
+     * @Assert\Regex("/^[0-9]*[.]?[0-9]{1,2}$/", message="Please enter valid acceleration")
      * @ORM\Column(name="acceleration", type="float", scale=2)
      */
     private $acceleration;

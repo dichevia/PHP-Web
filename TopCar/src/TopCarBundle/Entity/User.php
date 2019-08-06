@@ -4,6 +4,7 @@ namespace TopCarBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -12,6 +13,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="TopCarBundle\Repository\Users\UserRepository")
+ * @UniqueEntity(
+ * fields={"email"},
+ * errorPath="email",
+ * message="It appears you have already registered with this email."
+ *)
+ *
  */
 class User implements UserInterface
 {
@@ -28,7 +35,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255, unique=true)
-     * @Assert\NotBlank(message="Email can't be blank")
+     * @Assert\NotBlank(message="Email can't be blank.")
      * @Assert\Email(message="Please enter valid email.")
      */
     private $email;
@@ -47,8 +54,10 @@ class User implements UserInterface
      * @Assert\Length(
      *      min = 2,
      *      max = 30,
-     *      minMessage = "Your first name must be at least 2 characters long",
-     *      maxMessage = "Your first name cannot be longer than 30 characters")
+     *      minMessage = "Your first name must be at least 2 characters long.",
+     *      maxMessage = "Your first name cannot be longer than 30 characters.")
+     * @Assert\Regex("/^[A-Z]{1}[a-z]{1,29}$/",
+     *     message="Your first name should start with capital letter and contains only letters")
      */
     private $firstName;
 
@@ -59,8 +68,10 @@ class User implements UserInterface
      * @Assert\Length(
      *      min = 2,
      *      max = 30,
-     *      minMessage = "Your last name must be at least 2 characters long",
-     *      maxMessage = "Your last name cannot be longer than 30 characters")
+     *      minMessage = "Your last name must be at least 2 characters long.",
+     *      maxMessage = "Your last name cannot be longer than 30 characters.")
+     * @Assert\Regex("/^[A-Z]{1}[a-z]{1,29}$/",
+     *     message="Your last name should start with capital letter and contains only letters.")
      */
     private $lastName;
 
