@@ -2,6 +2,7 @@
 
 namespace TopCarBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -10,6 +11,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use TopCarBundle\Entity\Body;
+use TopCarBundle\Entity\Brand;
+use TopCarBundle\Entity\Fuel;
 
 class CarType extends AbstractType
 {
@@ -19,11 +23,20 @@ class CarType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('brand')
+            ->add('brand', EntityType::class, [
+                'class' => Brand::class,
+                'choice_label' => 'name'
+            ])
             ->add('model', TextType::class)
-            ->add('body')
+            ->add('body', EntityType::class, [
+                'class' => Body::class,
+                'choice_label' => 'type'
+            ])
             ->add('year', NumberType::class)
-            ->add('fuel')
+            ->add('fuel', EntityType::class, [
+                'class' => Fuel::class,
+                'choice_label' => 'type'
+            ])
             ->add('power', NumberType::class)
             ->add('topSpeed', NumberType::class)
             ->add('acceleration', NumberType::class)

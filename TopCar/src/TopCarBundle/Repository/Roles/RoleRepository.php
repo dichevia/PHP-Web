@@ -22,4 +22,6 @@ class RoleRepository extends \Doctrine\ORM\EntityRepository
                 $metadata
         );
     }
+
+
 }

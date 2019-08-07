@@ -17,4 +17,5 @@ interface UserServiceInterface
     public function findOne ($user);
 
     public function currentUser();
+
 }
