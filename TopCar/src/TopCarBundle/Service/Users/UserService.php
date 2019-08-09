@@ -62,4 +62,8 @@ class UserService implements UserServiceInterface
     }
 
 
+    public function merge(User $user)
+    {
+        return $this->userRepository->update($user);
+    }
 }

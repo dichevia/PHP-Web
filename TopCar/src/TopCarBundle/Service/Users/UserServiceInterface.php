@@ -12,6 +12,8 @@ interface UserServiceInterface
 
     public function save(User $user);
 
+    public function merge(User $user);
+
     public function findOneById ($id);
 
     public function findOne ($user);

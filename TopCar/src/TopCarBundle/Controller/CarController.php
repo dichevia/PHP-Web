@@ -19,6 +19,7 @@ use TopCarBundle\Service\Cars\BrandServiceInterface;
 use TopCarBundle\Service\Cars\CarServiceInterface;
 use TopCarBundle\Service\Cars\FuelServiceInterface;
 use TopCarBundle\Service\Comments\CommentServiceInterface;
+use TopCarBundle\Service\ImageUploader\ImageUploader;
 use TopCarBundle\Service\ImageUploader\ImageUploadInterface;
 use TopCarBundle\Service\Users\UserServiceInterface;
 
@@ -61,7 +62,7 @@ class CarController extends Controller
      * @param BodyServiceInterface $bodyService
      * @param FuelServiceInterface $fuelService
      * @param CommentServiceInterface $commentService
-     * @param ImageUploadInterface $imageUpload
+     * @param ImageUploader $imageUpload
      */
     public function __construct(CarServiceInterface $carService,
                                 UserServiceInterface $userService,
@@ -69,7 +70,7 @@ class CarController extends Controller
                                 BodyServiceInterface $bodyService,
                                 FuelServiceInterface $fuelService,
                                 CommentServiceInterface $commentService,
-                                ImageUploadInterface $imageUpload)
+                                ImageUploader $imageUpload)
     {
         $this->carService = $carService;
         $this->userService = $userService;

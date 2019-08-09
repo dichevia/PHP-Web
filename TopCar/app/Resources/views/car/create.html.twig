@@ -23,7 +23,7 @@
     <div class="signup-form">
         <form action="{{ path('car_create') }}" enctype="multipart/form-data" method="post">
             <h2>Add Car</h2>
-                        <p class="hint-text">Create your car.</p>
+            <p class="hint-text">Create your car.</p>
 
             <div class="form-group">
                 <select class="custom-select" name="car[brand]">
@@ -68,9 +68,9 @@
                     <label class="custom-file-label" for="inputGroupFile01">Choose image</label>
                 </div></div>
             {{ form_row(form._token) }}
-                <div class="form-group">
-                    <button type="submit" class="btn btn-success btn-lg btn-block">Add</button>
-                </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success btn-lg btn-block">Add</button>
+            </div>
         </form>
     </div>
 {% endblock %}

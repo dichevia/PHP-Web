@@ -4,6 +4,7 @@ namespace TopCarBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -26,7 +27,19 @@ class UserType extends AbstractType
                 'second_options' => ['label' => 'Repeat Password']
             ])
             ->add('firstName', TextType::class)
-            ->add('lastName', TextType::class);
+            ->add('lastName', TextType::class)
+            ->add('avatar', FileType::class,
+                [
+                    'mapped' => false,
+                    'required' => false,
+                    'constraints' => [
+                        new \Symfony\Component\Validator\Constraints\File([
+                            'maxSize' => '1024k',
+                            'mimeTypes' => 'image/*',
+                            'mimeTypesMessage' => 'Please upload a valid image file'
+                        ])
+                    ]
+                ]);
     }
 
     /**

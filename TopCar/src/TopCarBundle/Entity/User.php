@@ -22,6 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User implements UserInterface
 {
+    const DEFAULT_AVATAR = 'default-avatar.jpg';
     /**
      * @var int
      *
@@ -76,7 +77,7 @@ class User implements UserInterface
     private $lastName;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|Car[]
      *
      * @ORM\OneToMany(targetEntity="TopCarBundle\Entity\Car", mappedBy="owner" )
      */
@@ -100,11 +101,19 @@ class User implements UserInterface
      */
     private $comments;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="avatar", type="string", length=255)
+     */
+    private $avatar;
+
     public function __construct()
     {
         $this->cars = new ArrayCollection();
         $this->roles = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->avatar = self::DEFAULT_AVATAR;
     }
 
 
@@ -285,9 +294,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @return ArrayCollection|Car[]
      */
-    public function getCars(): ArrayCollection
+    public function getCars()
     {
         return $this->cars;
     }
@@ -331,5 +340,21 @@ class User implements UserInterface
     public function setComments($comments): void
     {
         $this->comments = $comments;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAvatar(): string
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * @param string $avatar
+     */
+    public function setAvatar(string $avatar): void
+    {
+        $this->avatar = $avatar;
     }
 }

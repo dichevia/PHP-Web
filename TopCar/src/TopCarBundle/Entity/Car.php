@@ -130,7 +130,7 @@ class Car
     /**
      * @var ArrayCollection|Comment[]
      *
-     * @ORM\OneToMany(targetEntity="TopCarBundle\Entity\Comment", mappedBy="car")
+     * @ORM\OneToMany(targetEntity="TopCarBundle\Entity\Comment", mappedBy="car", cascade={"remove"})
      */
     private $comments;
 
