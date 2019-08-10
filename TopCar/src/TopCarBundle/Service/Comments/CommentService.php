@@ -60,4 +60,9 @@ class CommentService implements CommentServiceInterface
     {
         return $this->commentRepository->getAllByDate($id);
     }
+
+    public function findAllByUser($id)
+    {
+        return $this->commentRepository->getAllByUser($id);
+    }
 }

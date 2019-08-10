@@ -5,7 +5,9 @@ namespace TopCarBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
 use TopCarBundle\Entity\User;
+use TopCarBundle\Form\AvatarType;
 use TopCarBundle\Form\UserType;
+use TopCarBundle\Service\Comments\CommentServiceInterface;
 use TopCarBundle\Service\ImageUploader\AvatarUploader;
 use TopCarBundle\Service\Users\UserServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -23,16 +25,24 @@ class UserController extends Controller
      * @var AvatarUploader
      */
     private $avatarUploader;
+    /**
+     * @var CommentServiceInterface
+     */
+    private $commentService;
 
     /**
      * UserController constructor.
      * @param UserServiceInterface $userService
      * @param AvatarUploader $avatarUploader
+     * @param CommentServiceInterface $commentService
      */
-    public function __construct(UserServiceInterface $userService, AvatarUploader $avatarUploader)
+    public function __construct(UserServiceInterface $userService,
+                                AvatarUploader $avatarUploader,
+                                CommentServiceInterface $commentService)
     {
         $this->userService = $userService;
         $this->avatarUploader = $avatarUploader;
+        $this->commentService = $commentService;
     }
 
     /**
@@ -77,7 +87,7 @@ class UserController extends Controller
         $user = $this->userService->currentUser();
 
         return $this->render('user/profile.html.twig', ['user' => $user,
-            'form' => $this->createForm(UserType::class, $user)->createView()]);
+            'form' => $this->createForm(AvatarType::class, $user)->createView()]);
     }
 
     /**
@@ -89,9 +99,7 @@ class UserController extends Controller
      */
     public function uploadAvatar(Request $request)
     {
-        $user = new User();
-
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(AvatarType::class, $this->userService->currentUser());
         $form->handleRequest($request);
         $avatar = $form['avatar']->getData();
 
@@ -104,5 +112,19 @@ class UserController extends Controller
         }
 
         return $this->redirectToRoute('user_profile');
+    }
+
+    /**
+     * @param $id
+     *
+     * @Route("user/{id}/comments", name="my-comments")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @return Response
+     */
+    public function myComments($id)
+    {
+        $myComments = $this->commentService->findAllByUser($id);
+
+        return $this->render('user/my-comments.html.twig', ['comments' => $myComments]);
     }
 }

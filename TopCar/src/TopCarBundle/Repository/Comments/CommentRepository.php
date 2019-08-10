@@ -45,4 +45,13 @@ class CommentRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getAllByUser($id)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.author=:id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
 }
