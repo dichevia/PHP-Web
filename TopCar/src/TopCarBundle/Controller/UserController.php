@@ -116,27 +116,6 @@ class UserController extends Controller
             'form' => $this->createForm(MessageType::class, $message)->createView()]);
     }
 
-    /**
-     * @param $id
-     * @param Request $request
-     *
-     * @Route("user/{id}", methods={"POST"})
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
-     * @return Response
-     * @throws \Exception
-     */
-    public function sendMessage($id, Request $request)
-    {
-        $message = new Message();
-
-        $form = $this->createForm(MessageType::class, $message);
-        $form->handleRequest($request);
-
-        $this->messageService->create($id, $message);
-        $this->addFlash('success', 'Message sent successfully!');
-
-        return $this->redirectToRoute('user_profile', ['id' => $id]);
-    }
 
 
     /**
