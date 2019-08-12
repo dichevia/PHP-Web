@@ -18,6 +18,7 @@
 
             <div class="container">
 
+
                 <div class="row">
     {% for car in cars %}
                     <div class="col-md-4">
@@ -29,7 +30,7 @@
                                     <div class="btn-group">
                                         <a href="{{ path('car_view', {'id': car.id}) }}" class="btn btn-sm btn-outline-primary" role="button" aria-disabled="true">View</a>
                                     </div>
-                                    <small class="text-muted">9 mins</small>
+                                    <small class="text-muted">{{ car.viewCount }} views</small>
                                 </div>
                             </div>
                         </div>
@@ -37,9 +38,7 @@
     {% endfor %}
 
                 </div>
-
             </div>
-
         </div>
 
 </div>

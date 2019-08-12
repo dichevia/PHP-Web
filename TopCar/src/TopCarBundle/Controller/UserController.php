@@ -4,11 +4,14 @@ namespace TopCarBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Routing\Annotation\Route;
+use TopCarBundle\Entity\Message;
 use TopCarBundle\Entity\User;
 use TopCarBundle\Form\AvatarType;
+use TopCarBundle\Form\MessageType;
 use TopCarBundle\Form\UserType;
 use TopCarBundle\Service\Comments\CommentServiceInterface;
 use TopCarBundle\Service\ImageUploader\AvatarUploader;
+use TopCarBundle\Service\Messages\MessageServiceInterface;
 use TopCarBundle\Service\Users\UserServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -29,20 +32,27 @@ class UserController extends Controller
      * @var CommentServiceInterface
      */
     private $commentService;
+    /**
+     * @var MessageServiceInterface
+     */
+    private $messageService;
 
     /**
      * UserController constructor.
      * @param UserServiceInterface $userService
      * @param AvatarUploader $avatarUploader
      * @param CommentServiceInterface $commentService
+     * @param MessageServiceInterface $messageService
      */
     public function __construct(UserServiceInterface $userService,
                                 AvatarUploader $avatarUploader,
-                                CommentServiceInterface $commentService)
+                                CommentServiceInterface $commentService,
+                                MessageServiceInterface $messageService)
     {
         $this->userService = $userService;
         $this->avatarUploader = $avatarUploader;
         $this->commentService = $commentService;
+        $this->messageService = $messageService;
     }
 
     /**
@@ -79,16 +89,55 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("user/profile", name="user_profile", methods={"GET"})
+     * @Route("user/profile", name="my_profile", methods={"GET"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
-    public function profile()
+    public function myProfile()
     {
         $user = $this->userService->currentUser();
 
         return $this->render('user/profile.html.twig', ['user' => $user,
             'form' => $this->createForm(AvatarType::class, $user)->createView()]);
     }
+
+    /**
+     * @Route("user/{id}", name="user_profile", methods={"GET"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param $id
+     * @return Response
+     * @throws \Exception
+     */
+    public function userProfile($id)
+    {
+        $user = $this->userService->findOneById($id);
+        $message = new Message();
+
+        return $this->render('user/profile.html.twig', ['user' => $user,
+            'form' => $this->createForm(MessageType::class, $message)->createView()]);
+    }
+
+    /**
+     * @param $id
+     * @param Request $request
+     *
+     * @Route("user/{id}", methods={"POST"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @return Response
+     * @throws \Exception
+     */
+    public function sendMessage($id, Request $request)
+    {
+        $message = new Message();
+
+        $form = $this->createForm(MessageType::class, $message);
+        $form->handleRequest($request);
+
+        $this->messageService->create($id, $message);
+        $this->addFlash('success', 'Message sent successfully!');
+
+        return $this->redirectToRoute('user_profile', ['id' => $id]);
+    }
+
 
     /**
      * @Route("user/profile", methods={"POST"})

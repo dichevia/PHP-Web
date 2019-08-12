@@ -26,7 +26,7 @@
                 <!-- Author -->
                 <p class="lead">
                     by
-                    <a href="#">{{ car.owner.firstName }} {{ car.owner.lastName }}</a>
+                    <a href="{{ path('user_profile',{'id':car.owner.id}) }}">{{ car.owner.firstName }} {{ car.owner.lastName }}</a>
                 </p>
 
 

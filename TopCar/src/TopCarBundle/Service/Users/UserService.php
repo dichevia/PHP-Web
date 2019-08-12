@@ -48,7 +48,7 @@ class UserService implements UserServiceInterface
 
     public function findOneById($id)
     {
-        $this->userRepository->find($id);
+        return $this->userRepository->find($id);
     }
 
     public function findOne($user)

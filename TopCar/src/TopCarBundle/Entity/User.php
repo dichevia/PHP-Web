@@ -108,12 +108,28 @@ class User implements UserInterface
      */
     private $avatar;
 
+    /**
+     * @var ArrayCollection|Message[]
+     *
+     * @ORM\OneToMany(targetEntity="TopCarBundle\Entity\Message", mappedBy="sender")
+     */
+    private $sentMessages;
+
+    /**
+     * @var ArrayCollection|Message[]
+     *
+     * @ORM\OneToMany(targetEntity="TopCarBundle\Entity\Message", mappedBy="recipient")
+     */
+    private $receivedMessages;
+
     public function __construct()
     {
         $this->cars = new ArrayCollection();
         $this->roles = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->avatar = self::DEFAULT_AVATAR;
+        $this->sentMessages = new ArrayCollection();
+        $this->receivedMessages = new ArrayCollection();
     }
 
 
@@ -353,8 +369,40 @@ class User implements UserInterface
     /**
      * @param string $avatar
      */
-    public function setAvatar(string $avatar): void
+    public function setAvatar(string $avatar)
     {
         $this->avatar = $avatar;
+    }
+
+    /**
+     * @return ArrayCollection|Message[]
+     */
+    public function getSentMessages()
+    {
+        return $this->sentMessages;
+    }
+
+    /**
+     * @param ArrayCollection|Message[] $sentMessages
+     */
+    public function setSentMessages($sentMessages)
+    {
+        $this->sentMessages = $sentMessages;
+    }
+
+    /**
+     * @return ArrayCollection|Message[]
+     */
+    public function getReceivedMessages()
+    {
+        return $this->receivedMessages;
+    }
+
+    /**
+     * @param ArrayCollection|Message[] $receivedMessages
+     */
+    public function setReceivedMessages($receivedMessages)
+    {
+        $this->receivedMessages = $receivedMessages;
     }
 }
