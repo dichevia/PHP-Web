@@ -38,4 +38,17 @@ class MessageService implements MessageServiceInterface
         $message->setSender($this->userService->currentUser());
         return $this->messageRepository->save($message);
     }
+
+    public function findReceivedByUser($id)
+    {
+        return $this->messageRepository->getReceivedByUser($id);
+    }
+
+    public function findSingleMessage($id)
+    {
+        $message =$this->messageRepository->getMessage($id);
+        $message->setSeen(true);
+        $this->messageRepository->update($message);
+        return $message;
+    }
 }

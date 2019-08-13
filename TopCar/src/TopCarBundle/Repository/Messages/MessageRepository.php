@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping;
 use Doctrine\ORM\ORMException;
 use TopCarBundle\Entity\Message;
+use TopCarBundle\Entity\User;
 
 /**
  * MessageRepository
@@ -33,5 +34,41 @@ class MessageRepository extends \Doctrine\ORM\EntityRepository
         } catch (ORMException $e) {
             return false;
         }
+    }
+
+    public function update(Message $message)
+    {
+        try {
+            $this->_em->merge($message);
+            $this->_em->flush();
+            return true;
+        } catch (ORMException $e) {
+            return false;
+        }
+    }
+
+    public function getReceivedByUser($id)
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.recipient=:id')
+            ->orderBy('m.createdOn', 'DESC')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getMessage($id)
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.id=:id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getSingleResult();
     }
 }

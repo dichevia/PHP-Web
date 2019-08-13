@@ -89,14 +89,14 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("user/profile", name="my_profile", methods={"GET"})
+     * @Route("profile", name="my_profile", methods={"GET"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function myProfile()
     {
         $user = $this->userService->currentUser();
 
-        return $this->render('user/profile.html.twig', ['user' => $user,
+        return $this->render('user/my-profile.html.twig', ['user' => $user,
             'form' => $this->createForm(AvatarType::class, $user)->createView()]);
     }
 
@@ -112,14 +112,13 @@ class UserController extends Controller
         $user = $this->userService->findOneById($id);
         $message = new Message();
 
-        return $this->render('user/profile.html.twig', ['user' => $user,
+        return $this->render('user/user-profile.html.twig', ['user' => $user,
             'form' => $this->createForm(MessageType::class, $message)->createView()]);
     }
 
 
-
     /**
-     * @Route("user/profile", methods={"POST"})
+     * @Route("profile",name="uploadAvatar", methods={"POST"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
      * @param Request $request
@@ -139,19 +138,17 @@ class UserController extends Controller
             $this->userService->merge($currentUser);
         }
 
-        return $this->redirectToRoute('user_profile');
+        return $this->redirectToRoute('my_profile');
     }
 
     /**
-     * @param $id
-     *
-     * @Route("user/{id}/comments", name="my-comments")
+     * @Route("comments", name="my-comments")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @return Response
      */
-    public function myComments($id)
+    public function myComments()
     {
-        $myComments = $this->commentService->findAllByUser($id);
+        $myComments = $this->commentService->findAllByUser($this->userService->currentUser());
 
         return $this->render('user/my-comments.html.twig', ['comments' => $myComments]);
     }
