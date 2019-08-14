@@ -42,6 +42,9 @@
                     <dt class="col-sm-3">Inbox:</dt>
                     <dd class="col-sm-9"><a
                                 href="{{ path('received') }}">{{ user.receivedMessages|length }}</a></dd>
+                    <dt class="col-sm-3">Sent:</dt>
+                    <dd class="col-sm-9"><a
+                                href="{{ path('sent') }}">{{ user.sentMessages|length }}</a></dd>
                 </dl>
             </div>
         </div>

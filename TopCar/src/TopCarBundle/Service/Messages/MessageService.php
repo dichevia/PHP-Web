@@ -44,11 +44,23 @@ class MessageService implements MessageServiceInterface
         return $this->messageRepository->getReceivedByUser($id);
     }
 
-    public function findSingleMessage($id)
+    public function findReceivedMessage($id)
     {
         $message =$this->messageRepository->getMessage($id);
         $message->setSeen(true);
         $this->messageRepository->update($message);
+        return $message;
+    }
+
+    public function findSentByUser($id)
+    {
+        return $this->messageRepository->getSentByUser($id);
+    }
+
+    public function findSentMessage($id)
+    {
+        $message =$this->messageRepository->getMessage($id);
+
         return $message;
     }
 }

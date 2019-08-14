@@ -73,14 +73,40 @@ class MessageController extends Controller
     /**
      * @param $id
      *
-     * @Route("messages/received/{id}", name="view")
+     * @Route("messages/received/{id}", name="view_received")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @return Response
      */
-    public function view ($id)
+    public function viewReceived ($id)
     {
-        $message = $this->messageService->findSingleMessage($id);
+        $message = $this->messageService->findReceivedMessage($id);
 
+
+        return $this->render('messages/view.html.twig',['message'=>$message]);
+    }
+
+    /**
+     * @Route("messages/sent", name="sent", methods={"GET"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     */
+    public function allSent()
+    {
+        $currentUser = $this->userService->currentUser();
+        $sent = $this->messageService->findSentByUser($currentUser);
+
+        return $this->render("messages/sent.html.twig", ['sent' =>$sent]);
+    }
+
+    /**
+     * @param $id
+     *
+     * @Route("messages/sent/{id}", name="view_sent")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @return Response
+     */
+    public function viewSent($id)
+    {
+        $message = $this->messageService->findSentMessage($id);
 
         return $this->render('messages/view.html.twig',['message'=>$message]);
     }

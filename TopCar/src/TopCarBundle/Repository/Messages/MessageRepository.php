@@ -71,4 +71,15 @@ class MessageRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getSingleResult();
     }
+
+    public function getSentByUser($id)
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.sender=:id')
+            ->orderBy('m.createdOn', 'DESC')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
+
 }

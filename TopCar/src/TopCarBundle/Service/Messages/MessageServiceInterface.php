@@ -12,5 +12,9 @@ interface MessageServiceInterface
 
     public function findReceivedByUser($id);
 
-    public function findSingleMessage($id);
+    public function findReceivedMessage($id);
+
+    public function findSentByUser($id);
+
+    public function findSentMessage($id);
 }
