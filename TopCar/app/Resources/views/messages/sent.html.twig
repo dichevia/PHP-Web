@@ -1,10 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block body_id 'sent'%}
+{% block body_id 'sent' %}
 
 {% block main %}
+
     <div class="container">
         <div class="table-wrapper">
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('warning') %}
+                <div class="alert alert-warning">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
             <h2>Sent</h2>
             <p class="hint-text">All sent messages</p>
 
@@ -15,6 +32,8 @@
                     <th>Subject</th>
                     <th>Status</th>
                     <th>View</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -30,6 +49,8 @@
                             <td><span class="badge badge-danger">unread</span></td>
                         {% endif %}
                         <td><a href="{{ path('view_sent', {'id':message.id}) }}">View</a></td>
+                        <td><a href="{{ path('edit_sent', {'id':message.id}) }}">Edit</a></td>
+                        <td><a href="{{ path('delete_sent', {'id':message.id}) }}">Delete</a></td>
                     </tr>
 
                 {% endfor %}
@@ -37,5 +58,6 @@
             </table>
         </div>
     </div>
+
 {% endblock %}
 

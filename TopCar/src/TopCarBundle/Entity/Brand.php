@@ -94,7 +94,7 @@ class Brand
     /**
      * @param ArrayCollection $cars
      */
-    public function setCars(ArrayCollection $cars): void
+    public function setCars(ArrayCollection $cars)
     {
         $this->cars = $cars;
     }
@@ -107,7 +107,7 @@ class Brand
     /**
      * @return string
      */
-    public function getImage(): string
+    public function getImage()
     {
         return $this->image;
     }
@@ -115,7 +115,7 @@ class Brand
     /**
      * @param string $image
      */
-    public function setImage(string $image): void
+    public function setImage(string $image)
     {
         $this->image = $image;
     }

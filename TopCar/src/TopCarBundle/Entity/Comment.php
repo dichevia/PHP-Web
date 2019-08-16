@@ -3,6 +3,7 @@
 namespace TopCarBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Comment
@@ -25,6 +26,7 @@ class Comment
      * @var string
      *
      * @ORM\Column(name="content", type="string", length=255)
+     * @Assert\NotBlank(message="Comment content can't be blank!")
      */
     private $content;
 
@@ -124,7 +126,7 @@ class Comment
     /**
      * @param Car $car
      */
-    public function setCar(Car $car): void
+    public function setCar(Car $car)
     {
         $this->car = $car;
     }
@@ -140,7 +142,7 @@ class Comment
     /**
      * @param User $author
      */
-    public function setAuthor(User $author): void
+    public function setAuthor(User $author)
     {
         $this->author = $author;
     }

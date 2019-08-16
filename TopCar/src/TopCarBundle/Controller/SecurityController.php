@@ -20,7 +20,6 @@ class SecurityController extends Controller
 
     /**
      * @Route("/logout", name="security_logout")
-     *
      */
     public function logout()
     {

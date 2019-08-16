@@ -6,8 +6,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use TopCarBundle\Entity\Comment;
+use TopCarBundle\Entity\User;
 use TopCarBundle\Form\CommentType;
 use TopCarBundle\Service\Cars\CarServiceInterface;
 use TopCarBundle\Service\Comments\CommentServiceInterface;
@@ -63,6 +65,91 @@ class CommentController extends Controller
 
         $this->commentService->save($id, $comment);
 
-        return $this->redirectToRoute('car_view', ['id' => $id]);
+        return $this->redirectToRoute('car_view', ['id' => $id, ]);
     }
+
+    /**
+     * @Route("comments", name="my-comments")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @return Response
+     */
+    public function myComments()
+    {
+        $myComments = $this->commentService->findAllByUser($this->userService->currentUser());
+
+        return $this->render('comments/my-comments.html.twig', ['comments' => $myComments]);
+    }
+
+    /**
+     * @Route("comments/edit/{id}", name="edit", methods={"GET"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @param $id
+     * @return RedirectResponse|Response
+     */
+    public function edit($id)
+    {
+        $comment = $this->commentService->findOneById($id);
+        /**@var User $currentUser */
+        $currentUser = $this->userService->currentUser();
+
+        if (null == $comment) {
+            return $this->redirectToRoute('homepage');
+        }
+        if (!$currentUser->isAdmin() && !$currentUser->isAuthor($comment)) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        $form = $this->createForm(CommentType::class, $comment);
+
+        return $this->render('comments/edit.html.twig', ['comment' => $comment, 'form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("comments/edit/{id}", methods={"POST"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @param Request $request
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function editProcess(Request $request, $id)
+    {
+        $comment = $this->commentService->findOneById($id);
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        $this->commentService->edit($comment);
+        $this->addFlash('success', 'Comment edited successfully!');
+
+        return $this->redirectToRoute('my-comments');
+    }
+
+    /**
+     * @Route("comments/delete/{id}", name="delete", methods={"GET"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @param $id
+     * @return RedirectResponse|Response
+     */
+    public function delete($id)
+    {
+        $comment = $this->commentService->findOneById($id);
+        /**@var User $currentUser */
+        $currentUser = $this->userService->currentUser();
+
+        if (null == $comment) {
+            return $this->redirectToRoute('homepage');
+        }
+        if (!$currentUser->isAdmin() && !$currentUser->isAuthor($comment)) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        $this->commentService->delete($comment);
+        $this->addFlash('success', 'Comment deleted successfully!');
+
+        return $this->redirectToRoute('my-comments');
+    }
+
 }

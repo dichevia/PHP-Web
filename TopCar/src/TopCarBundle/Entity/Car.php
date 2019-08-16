@@ -410,7 +410,7 @@ class Car
     /**
      * @param \DateTime $dateAdded
      */
-    public function setDateAdded(\DateTime $dateAdded): void
+    public function setDateAdded(\DateTime $dateAdded)
     {
         $this->dateAdded = $dateAdded;
     }
@@ -426,7 +426,7 @@ class Car
     /**
      * @param ArrayCollection|Comment[] $comments
      */
-    public function setComments($comments): void
+    public function setComments($comments)
     {
         $this->comments = $comments;
     }

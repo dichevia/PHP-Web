@@ -63,4 +63,19 @@ class MessageService implements MessageServiceInterface
 
         return $message;
     }
+
+    public function edit(Message $message)
+    {
+        return $this->messageRepository->update($message);
+    }
+
+    public function delete(Message $message)
+    {
+        return $this->messageRepository->remove($message);
+    }
+
+    public function findOneMessage($id)
+    {
+        return $this->messageRepository->find($id);
+    }
 }

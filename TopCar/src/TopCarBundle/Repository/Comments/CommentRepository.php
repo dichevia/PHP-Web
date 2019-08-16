@@ -36,6 +36,28 @@ class CommentRepository extends \Doctrine\ORM\EntityRepository
         }
     }
 
+    public function update($comment)
+    {
+        try {
+            $this->_em->merge($comment);
+            $this->_em->flush();
+            return true;
+        } catch (ORMException $e) {
+            return false;
+        }
+    }
+
+    public function remove($comment)
+    {
+        try {
+            $this->_em->remove($comment);
+            $this->_em->flush();
+            return true;
+        } catch (ORMException $e) {
+            return false;
+        }
+    }
+
     public function getAllByDate($id)
     {
         return $this->createQueryBuilder('c')

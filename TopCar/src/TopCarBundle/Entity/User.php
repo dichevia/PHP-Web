@@ -285,7 +285,7 @@ class User implements UserInterface
      */
     public function getSalt()
     {
-        // TODO: Implement getSalt() method.
+
     }
 
     /**
@@ -306,7 +306,7 @@ class User implements UserInterface
      */
     public function eraseCredentials()
     {
-        // TODO: Implement eraseCredentials() method.
+
     }
 
     /**
@@ -337,6 +337,15 @@ class User implements UserInterface
         return $car->getOwnerId() == $this->getId();
     }
 
+    /**
+     * @param Comment $comment
+     * @return bool
+     */
+    public function isAuthor(Comment $comment)
+    {
+        return $comment->getAuthor()->getId() == $this->getId();
+    }
+
     public function isAdmin()
     {
         return in_array('ROLE_ADMIN', $this->getRoles());
@@ -353,7 +362,7 @@ class User implements UserInterface
     /**
      * @param ArrayCollection|Comment[] $comments
      */
-    public function setComments($comments): void
+    public function setComments($comments)
     {
         $this->comments = $comments;
     }
@@ -361,7 +370,7 @@ class User implements UserInterface
     /**
      * @return string
      */
-    public function getAvatar(): string
+    public function getAvatar()
     {
         return $this->avatar;
     }

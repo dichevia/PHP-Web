@@ -65,4 +65,19 @@ class CommentService implements CommentServiceInterface
     {
         return $this->commentRepository->getAllByUser($id);
     }
+
+    public function findOneById($id)
+    {
+        return $this->commentRepository->find($id);
+    }
+
+    public function edit(Comment $comment)
+    {
+        $this->commentRepository->update($comment);
+    }
+
+    public function delete(Comment $comment)
+    {
+        return $this->commentRepository->remove($comment);
+    }
 }

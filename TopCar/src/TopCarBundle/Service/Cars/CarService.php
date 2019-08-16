@@ -19,7 +19,7 @@ class CarService implements CarServiceInterface
         $this->userService = $userService;
     }
 
-    public function save(Car $car): bool
+    public function save(Car $car)
     {
         $owner = $this->userService->currentUser();
         $car->setOwner($owner);
@@ -27,7 +27,7 @@ class CarService implements CarServiceInterface
         return $this->carRepository->insert($car);
     }
 
-    public function edit(Car $car): bool
+    public function edit(Car $car)
     {
         $car->setOwner($this->userService->currentUser());
         $car->setViewCount($car->getViewCount());
@@ -35,7 +35,7 @@ class CarService implements CarServiceInterface
         return $this->carRepository->update($car);
     }
 
-    public function remove(Car $car): bool
+    public function remove(Car $car)
     {
         return $this->carRepository->remove($car);
     }
@@ -45,7 +45,7 @@ class CarService implements CarServiceInterface
         return $this->carRepository->getAllByDate();
     }
 
-    public function findOneById(int $id)
+    public function findOneById($id)
     {
         return $this->carRepository->find($id);
     }
@@ -72,7 +72,7 @@ class CarService implements CarServiceInterface
 
     }
 
-    public function updateViews(Car $car): bool
+    public function updateViews(Car $car)
     {
         $car->setViewCount($car->getViewCount() + 1);
 

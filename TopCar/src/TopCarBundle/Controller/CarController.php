@@ -12,8 +12,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use TopCarBundle\Entity\Car;
+use TopCarBundle\Entity\Comment;
 use TopCarBundle\Entity\User;
 use TopCarBundle\Form\CarType;
+use TopCarBundle\Form\CommentType;
 use TopCarBundle\Service\Cars\BodyServiceInterface;
 use TopCarBundle\Service\Cars\BrandServiceInterface;
 use TopCarBundle\Service\Cars\CarServiceInterface;
@@ -82,19 +84,16 @@ class CarController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
      * @Route("/car/create", methods={"GET"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
+     * @param Request $request
      * @return RedirectResponse|Response
      */
     public function create(Request $request)
     {
         $car = new Car();
-
         list($brands, $bodies, $fuels) = $this->createCarAttributes();
-
         $form = $this->createAndHandleForm($request, $car);
 
         return $this->render('car/create.html.twig',
@@ -107,18 +106,17 @@ class CarController extends Controller
     }
 
     /**
-     * @param Request $request
      *
      * @Route("/car/create", name="car_create", methods={"POST"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
+     * @param Request $request
      * @return RedirectResponse|Response
      * @throws ExceptionAlias
      */
     public function createProcess(Request $request)
     {
         $car = new Car();
-
         $form = $this->createAndHandleForm($request, $car);
 
         /** @var UploadedFile $imageFile */
@@ -133,13 +131,13 @@ class CarController extends Controller
 
         $this->carService->save($car);
 
-        return $this->redirectToRoute('homepage');
+        return $this->redirectToRoute('my_cars');
     }
 
     /**
-     * @param $id
-     *
      * @Route("/car/view/{id}", name="car_view", methods={"GET"})
+     *
+     * @param $id
      * @return Response
      */
     public function view($id)
@@ -149,6 +147,7 @@ class CarController extends Controller
         /*** @var Car $car */
         $car = $this->carService->findOneById($id);
         $comments = $this->commentService->findAllByDate($id);
+        $form = $this->createForm(CommentType::class, new Comment())->createView();
 
         if ($car === null) {
             return $this->redirectToRoute("homepage");
@@ -160,17 +159,18 @@ class CarController extends Controller
             'car' => $car,
             'bodies' => $bodies,
             'brands' => $brands,
-            'comments' => $comments]);
+            'comments' => $comments,
+            'form' => $form,
+            ]);
     }
 
     /**
-     * @param Request $request
-     * @param $id
-     *
-     * @return Response
      * @Route("/car/edit/{id}",name="car_edit", methods={"GET"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
+     * @param Request $request
+     * @param $id
+     * @return Response
      */
     public function edit(Request $request, $id)
     {
@@ -180,7 +180,6 @@ class CarController extends Controller
         if (null == $car) {
             return $this->redirectToRoute('homepage');
         }
-
         /** @var User $currentUser */
         $currentUser = $this->userService->currentUser();
         if (!$currentUser->isAdmin() && !$currentUser->isOwner($car)) {
@@ -200,62 +199,42 @@ class CarController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param $id
-     *
-     * @return Response
      * @Route("/car/edit/{id}", methods={"POST"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
+     * @param Request $request
+     * @param $id
+     * @return Response
      */
     public function editProcess(Request $request, $id)
     {
         /** @var Car $car */
         $car = $this->carService->findOneById($id);
-
         $form = $this->createAndHandleForm($request, $car);
 
         /** @var UploadedFile $imageFile */
-
         $imageFile = $form->getExtraData()['new_image'];
 
         if ($imageFile) {
             $this->addImage($imageFile, $car);
         }
-
         if (!$form->isValid()) {
             return $this->renderErrors('car/edit.html.twig', $car, $form);
         }
 
         $this->carService->edit($car);
+        $this->addFlash('success', 'Car edited successfully!');
 
-        return $this->redirectToRoute('car_view', ['id' => $car->getId()]);
+        return $this->redirectToRoute('my_cars');
     }
 
     /**
-     * @Route("/car/my-cars", name="my_cars")
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
-     *
-     * @return Response
-     */
-    public function getAllArticlesByUser()
-    {
-        $car = $this->carService->findAllByOwnerId();
-
-        return $this->render('car/my-cars.html.twig',
-            ['cars' => $car]
-        );
-    }
-
-
-    /**
-     * @param Request $request
-     * @param $id
-     * @return Response
-     *
      * @Route("/car/delete/{id}", name="car_delete", methods={"GET"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      *
+     * @param Request $request
+     * @param $id
+     * @return Response
      */
 
     public function deleteProcess(Request $request, $id)
@@ -266,21 +245,35 @@ class CarController extends Controller
         if (null == $car) {
             return $this->redirectToRoute('homepage');
         }
-
         /** @var User $currentUser */
         $currentUser = $this->userService->currentUser();
         if (!$currentUser->isAdmin() && !$currentUser->isOwner($car)) {
             return $this->redirectToRoute('homepage');
         }
 
-        $form = $this->createAndHandleForm($request, $car);
+//        $form = $this->createAndHandleForm($request, $car);
 
-        $car->setOwner($car->getOwner());
-        $car->setViewCount($car->getViewCount());
         $this->carService->remove($car);
+        $this->addFlash('success', 'Car delete successfully!');
 
         return $this->redirectToRoute('my_cars');
     }
+
+    /**
+     * @Route("/car/my-cars", name="my_cars")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
+     * @return Response
+     */
+    public function getAllCarsByUser()
+    {
+        $car = $this->carService->findAllByOwnerId();
+
+        return $this->render('car/my-cars.html.twig',
+            ['cars' => $car]
+        );
+    }
+
 
     /**
      * @Route("/cars/all", name="car_all")

@@ -47,6 +47,17 @@ class MessageRepository extends \Doctrine\ORM\EntityRepository
         }
     }
 
+    public function remove($message)
+    {
+        try {
+            $this->_em->remove($message);
+            $this->_em->flush();
+            return true;
+        } catch (ORMException $e) {
+            return false;
+        }
+    }
+
     public function getReceivedByUser($id)
     {
         return $this->createQueryBuilder('m')

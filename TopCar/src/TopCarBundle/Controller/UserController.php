@@ -79,10 +79,10 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if (!$form->isValid()) {
-
             return $this->render("user/register.html.twig",
                 ['form' => $form->createView(), 'errors' => $form->getErrors()]);
         }
+
         $this->userService->save($user);
 
         return $this->redirectToRoute("security_login");
@@ -103,6 +103,7 @@ class UserController extends Controller
     /**
      * @Route("user/{id}", name="user_profile", methods={"GET"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     *
      * @param $id
      * @return Response
      * @throws \Exception
@@ -141,15 +142,4 @@ class UserController extends Controller
         return $this->redirectToRoute('my_profile');
     }
 
-    /**
-     * @Route("comments", name="my-comments")
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
-     * @return Response
-     */
-    public function myComments()
-    {
-        $myComments = $this->commentService->findAllByUser($this->userService->currentUser());
-
-        return $this->render('user/my-comments.html.twig', ['comments' => $myComments]);
-    }
 }

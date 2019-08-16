@@ -17,4 +17,10 @@ interface MessageServiceInterface
     public function findSentByUser($id);
 
     public function findSentMessage($id);
+
+    public function edit(Message $message);
+
+    public function delete(Message $message);
+
+    public function findOneMessage($id);
 }

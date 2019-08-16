@@ -7,17 +7,17 @@ use TopCarBundle\Entity\Car;
 
 interface CarServiceInterface
 {
-    public function save(Car $car): bool;
+    public function save(Car $car);
 
-    public function edit(Car $car): bool;
+    public function edit(Car $car);
 
-    public function remove(Car $car): bool;
+    public function remove(Car $car);
 
-    public function updateViews(Car $car):bool;
+    public function updateViews(Car $car);
 
     public function findAllByDate();
 
-    public function findOneById(int $id);
+    public function findOneById($id);
 
     public function findAllByOwnerId();
 
