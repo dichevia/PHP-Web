@@ -161,7 +161,7 @@ class CarController extends Controller
             'brands' => $brands,
             'comments' => $comments,
             'form' => $form,
-            ]);
+        ]);
     }
 
     /**
@@ -259,6 +259,8 @@ class CarController extends Controller
         return $this->redirectToRoute('my_cars');
     }
 
+
+
     /**
      * @Route("/car/my-cars", name="my_cars")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
@@ -310,6 +312,7 @@ class CarController extends Controller
 
         return $this->render('car/cars.html.twig', ['cars' => $cars, 'title' => $brand]);
     }
+
 
     /**
      * @param UploadedFile $imageFile
