@@ -3,6 +3,7 @@
 namespace TopCarBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Message
@@ -32,6 +33,7 @@ class Message
      * @var string
      *
      * @ORM\Column(name="body", type="text")
+     * @Assert\NotBlank(message="Message content can't be blank!")
      */
     private $body;
 

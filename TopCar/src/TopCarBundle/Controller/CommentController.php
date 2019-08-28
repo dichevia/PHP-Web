@@ -53,7 +53,7 @@ class CommentController extends Controller
      * @param Request $request
      * @return RedirectResponse
      *
-     * @Route("/car/view/{id}", methods={"POST"})
+     * @Route("/car/view/{id}", name="create_comment", methods={"POST"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function add($id, Request $request)
@@ -63,9 +63,13 @@ class CommentController extends Controller
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
-        $this->commentService->save($id, $comment);
+        if ($form->isValid()) {
+            $this->commentService->save($id, $comment);
+            return $this->redirectToRoute('car_view', ['id' => $id,]);
+        }
 
-        return $this->redirectToRoute('car_view', ['id' => $id, ]);
+        $this->addFlash('warning', 'Comment must contain at least 1 symbol!');
+        return $this->redirectToRoute('car_view', ['id' => $id,]);
     }
 
     /**

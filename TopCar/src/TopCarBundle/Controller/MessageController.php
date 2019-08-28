@@ -75,16 +75,46 @@ class MessageController extends Controller
     /**
      * @param $id
      *
-     * @Route("messages/received/{id}", name="view_received")
+     * @Route("messages/received/{id}", name="view_received", methods={"GET"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @return Response
+     * @throws \Exception
      */
     public function viewReceived($id)
     {
         $message = $this->messageService->findReceivedMessage($id);
 
+        return $this->render('messages/viewReceived.html.twig', ['message' => $message,
+            'form'=>$this->createForm(MessageType::class, new Message())->createView()]);
+    }
 
-        return $this->render('messages/view.html.twig', ['message' => $message]);
+    /**
+     * @param Request $request
+     * @param $id
+     * @return Response
+     * @throws \Exception
+     *
+     * @Route("messages/received/{id}", name="reply", methods={"POST"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     */
+    public function replyReceived(Request $request, $id)
+    {
+        /**@var Message $receivedMessage*/
+        $receivedMessage = $this->messageService->findReceivedMessage($id);
+        $recipientId = $receivedMessage->getSender();
+        $replyMessage = new Message();
+
+        $form = $this->createForm(MessageType::class, $replyMessage);
+        $form->handleRequest($request);
+
+        if ($form->isValid()){
+            $this->messageService->create($recipientId, $replyMessage);
+            $this->addFlash('success', 'Message sent successfully!');
+            return  $this->redirectToRoute('view_received', ['id'=>$id]);
+        }
+
+        $this->addFlash('warning', 'Message must contain at least 1 symbol!');
+        return  $this->redirectToRoute('view_received', ['id'=>$id]);
     }
 
     /**
@@ -110,7 +140,7 @@ class MessageController extends Controller
     {
         $message = $this->messageService->findSentMessage($id);
 
-        return $this->render('messages/view.html.twig', ['message' => $message]);
+        return $this->render('messages/viewSent.html.twig', ['message' => $message]);
     }
 
     /**

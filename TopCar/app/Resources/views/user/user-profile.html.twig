@@ -1,9 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block body_id 'user_profile' %}
+
 {% block main %}
 
     <div class="container-profile">
+
         {% for message in app.flashes('success') %}
             <div class="alert alert-success">
                 {{ message }}
@@ -48,7 +50,6 @@
                         <dt class="col-sm-3">Comments:</dt>
                         <dd class="col-sm-9">{{ user.comments|length }}
                         </dd>
-
                     {% endif %}
                 </dl>
             </div>

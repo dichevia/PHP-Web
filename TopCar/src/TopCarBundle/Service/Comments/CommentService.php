@@ -73,6 +73,8 @@ class CommentService implements CommentServiceInterface
 
     public function edit(Comment $comment)
     {
+        $comment->setDateAdded(new \DateTime('now'));
+        $comment->setIsEdited(true);
         $this->commentRepository->update($comment);
     }
 

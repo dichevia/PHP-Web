@@ -51,9 +51,17 @@ class Comment
      */
     private $author;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_edited", type="boolean")
+     */
+    private $isEdited;
+
     public function __construct()
     {
         $this->dateAdded = new \DateTime('now');
+        $this->isEdited = false;
     }
 
     /**
@@ -145,5 +153,21 @@ class Comment
     public function setAuthor(User $author)
     {
         $this->author = $author;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEdited()
+    {
+        return $this->isEdited;
+    }
+
+    /**
+     * @param bool $isEdited
+     */
+    public function setIsEdited($isEdited)
+    {
+        $this->isEdited = $isEdited;
     }
 }
