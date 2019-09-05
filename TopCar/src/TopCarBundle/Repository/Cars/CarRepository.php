@@ -67,12 +67,20 @@ class CarRepository extends \Doctrine\ORM\EntityRepository
             ->getResult();
     }
 
-    public function getAllByDate()
+    public function getAllByDate($page, $rpp)
     {
-        return $this->createQueryBuilder('car')
+        $results = $this->createQueryBuilder('car')
             ->orderBy('car.dateAdded', 'DESC')
+            ->setFirstResult(($page-1)*$rpp)
+            ->setMaxResults($rpp)
             ->getQuery()
             ->getResult();
+        $count = $this->createQueryBuilder('car')
+            ->select('COUNT(car)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return [$results, $count];
     }
 
 

@@ -9,6 +9,7 @@ parameters:
     locale: en
     images_directory: '%kernel.project_dir%/web/uploads/cars/images'
     avatars_directory: '%kernel.project_dir%/web/uploads/users/avatars'
+    cars_per_page: 9
 
 framework:
     #esi: ~

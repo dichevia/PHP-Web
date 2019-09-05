@@ -16,6 +16,7 @@ use TopCarBundle\Entity\Comment;
 use TopCarBundle\Entity\User;
 use TopCarBundle\Form\CarType;
 use TopCarBundle\Form\CommentType;
+use TopCarBundle\lib\Paginator;
 use TopCarBundle\Service\Cars\BodyServiceInterface;
 use TopCarBundle\Service\Cars\BrandServiceInterface;
 use TopCarBundle\Service\Cars\CarServiceInterface;
@@ -278,13 +279,26 @@ class CarController extends Controller
 
 
     /**
-     * @Route("/cars/all", name="car_all")
+     * @Route("/cars/all/{page}", name="car_all")
+     *
+     * @param int $page
+     * @return Response
      */
-    public function all()
+    public function all($page=1)
     {
-        $cars = $this->carService->findAllByDate();
+        $rpp=$this->container->getParameter('cars_per_page');
+        list ($results, $totalCount) = $this->carService->findAllByDate($page, $rpp);
+        $paginator = new Paginator($page, $totalCount, $rpp);
 
-        return $this->render('car/cars.html.twig', ['cars' => $cars, 'title' => 'All cars']);
+        $pageList = $paginator->getPagesList();
+
+
+        return $this->render('car/cars.html.twig', [
+            'cars' => $results,
+            'title' => 'All cars',
+            'paginator'=>$pageList,
+            'cur'=>$page,
+            'total'=>$paginator->getTotalPages()]);
     }
 
     /**

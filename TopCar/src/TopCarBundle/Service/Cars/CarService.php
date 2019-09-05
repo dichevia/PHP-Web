@@ -40,9 +40,9 @@ class CarService implements CarServiceInterface
         return $this->carRepository->remove($car);
     }
 
-    public function findAllByDate()
+    public function findAllByDate($page, $rpp)
     {
-        return $this->carRepository->getAllByDate();
+        return $this->carRepository->getAllByDate($page,$rpp);
     }
 
     public function findOneById($id)

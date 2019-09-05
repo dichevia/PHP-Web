@@ -15,7 +15,7 @@ interface CarServiceInterface
 
     public function updateViews(Car $car);
 
-    public function findAllByDate();
+    public function findAllByDate($page, $rpp);
 
     public function findOneById($id);
 
