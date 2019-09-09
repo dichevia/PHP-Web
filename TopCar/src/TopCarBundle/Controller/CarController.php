@@ -261,7 +261,6 @@ class CarController extends Controller
     }
 
 
-
     /**
      * @Route("/car/my-cars", name="my_cars")
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
@@ -279,52 +278,66 @@ class CarController extends Controller
 
 
     /**
-     * @Route("/cars/all/{page}", name="car_all")
+     * @Route("/cars/all/{page}", name="car_all", requirements={"page": "\d+"})
      *
      * @param int $page
      * @return Response
      */
-    public function all($page=1)
+    public function all($page = 1)
     {
-        $rpp=$this->container->getParameter('cars_per_page');
+        $rpp = $this->container->getParameter('cars_per_page');
         list ($results, $totalCount) = $this->carService->findAllByDate($page, $rpp);
         $paginator = new Paginator($page, $totalCount, $rpp);
-
         $pageList = $paginator->getPagesList();
-
 
         return $this->render('car/cars.html.twig', [
             'cars' => $results,
             'title' => 'All cars',
-            'paginator'=>$pageList,
-            'cur'=>$page,
-            'total'=>$paginator->getTotalPages()]);
+            'paginator' => $pageList,
+            'cur' => intval($page),
+            'total' => $paginator->getTotalPages()]);
     }
 
     /**
-     * @Route("/cars/body/{type}", name="car_body")
+     * @Route("/cars/body/{type}/{page}", name="car_body")
      *
      * @param $type
+     * @param int $page
      * @return Response
      */
-    public function allByBody($type)
+    public function allByBody($type, $page = 1)
     {
-        $cars = $this->carService->findAllByBody($type);
 
-        return $this->render('car/cars.html.twig', ['cars' => $cars, 'title' => $type]);
+        $rpp = $this->container->getParameter('cars_per_page');
+        list ($results, $totalCount) = $this->carService->findAllByBody($type, $page, $rpp);
+        $paginator = new Paginator($page, $totalCount, $rpp);
+        $pageList = $paginator->getPagesList();
+
+        return $this->render('car/cars.html.twig', [
+            'cars' => $results,
+            'title' => $type,
+            'paginator' => $pageList,
+            'cur' => intval($page)]);
     }
 
     /**
-     * @Route("/cars/brand/{brand}", name="car_brand")
+     * @Route("/cars/brand/{brand}/{page}", name="car_brand")
      *
      * @param $brand
+     * @param $page
      * @return Response
      */
-    public function allByBrand($brand)
+    public function allByBrand($brand, $page=1)
     {
-        $cars = $this->carService->findAllByBrand($brand);
-
-        return $this->render('car/cars.html.twig', ['cars' => $cars, 'title' => $brand]);
+        $rpp = $this->container->getParameter('cars_per_page');
+        list ($results, $totalCount) = $this->carService->findAllByBrand($brand, $page, $rpp);
+        $paginator = new Paginator($page, $totalCount, $rpp);
+        $pageList = $paginator->getPagesList();
+        return $this->render('car/cars.html.twig', [
+            'cars' => $results,
+            'title' => $brand,
+            'paginator' => $pageList,
+            'cur' => intval($page)]);
     }
 
 

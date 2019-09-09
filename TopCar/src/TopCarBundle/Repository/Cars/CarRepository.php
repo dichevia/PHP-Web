@@ -71,7 +71,7 @@ class CarRepository extends \Doctrine\ORM\EntityRepository
     {
         $results = $this->createQueryBuilder('car')
             ->orderBy('car.dateAdded', 'DESC')
-            ->setFirstResult(($page-1)*$rpp)
+            ->setFirstResult(($page - 1) * $rpp)
             ->setMaxResults($rpp)
             ->getQuery()
             ->getResult();
@@ -84,27 +84,36 @@ class CarRepository extends \Doctrine\ORM\EntityRepository
     }
 
 
-    public function getAllByBody($type)
+    public function getAllByBody($type, $page, $rpp)
     {
-        return $this->createQueryBuilder('c')
+        $results = $this->createQueryBuilder('c')
             ->addSelect('b')
             ->innerJoin("c.body", 'b')
             ->where('b.type=:type')
             ->setParameter('type', $type)
+            ->setFirstResult(($page - 1) * $rpp)
+            ->setMaxResults($rpp)
             ->getQuery()
             ->getResult();
+        $count = count($results);
+
+        return [$results, $count];
     }
 
-    public function getAllByBrand($brand)
+    public function getAllByBrand($brand, $page, $rpp)
     {
-        return $this->createQueryBuilder('c')
+        $results = $this->createQueryBuilder('c')
             ->addSelect('b')
             ->innerJoin("c.brand", 'b')
             ->where('b.name=:brand')
             ->setParameter('brand', $brand)
+            ->setFirstResult(($page - 1) * $rpp)
+            ->setMaxResults($rpp)
             ->getQuery()
             ->getResult();
+        $count = count($results);
 
+        return [$results, $count];
     }
 
 }
